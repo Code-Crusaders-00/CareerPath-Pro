@@ -56,6 +56,31 @@ app.post('/login', (req, res) => {
 
 });
 
+app.get('/users/:userId/job-applications', (req, res) => {
+  const queryOne = `SELECT jobID FROM jobs_to_user WHERE username = '${req.params.userId}'`;
+
+  db.any(queryOne)
+    .then( (jobId) => {
+      const jobIds = jobId.map( (job) => {
+        return job.jobid;
+      });
+
+      const queryTwo = `SELECT * FROM applications WHERE jobID = ANY (array[${jobIds}])`;
+
+      db.any(queryTwo)
+        .then( (jobs) => {
+          res.send(jobs);
+        })
+        .catch( (err) => {
+          console.log(err);
+        });
+
+    })
+    .catch( (err) => {
+      console.log(err);
+    });
+});
+
 const port = process.env.PORT || 3000;
 app.listen(port, () => {
   console.log(`Server is listening on port ${port}`);
