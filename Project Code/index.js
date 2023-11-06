@@ -102,6 +102,18 @@ app.post('/users/:userId/job-applications', (req, res) => {
     });
 });
 
+app.get('/users/:userId/job-applications/:applicationId', (req, res) => {
+  const query = `SELECT * FROM applications WHERE jobID = '${req.params.applicationId}'`;
+
+  db.one(query)
+    .then( (job) => {
+      res.send(job);
+    })
+    .catch( (err) => {
+      console.log(err);
+    });
+});
+
 const port = process.env.PORT || 3000;
 app.listen(port, () => {
   console.log(`Server is listening on port ${port}`);
