@@ -9,7 +9,7 @@ CREATE TABLE users(
 
 DROP TABLE IF EXISTS applications CASCADE;
 CREATE TABLE applications(
-    jobID INTEGER PRIMARY KEY,
+    jobID SERIAL PRIMARY KEY,
     name VARCHAR,
     company VARCHAR,
     industry VARCHAR,
