@@ -1,7 +1,7 @@
 DROP TABLE IF EXISTS users CASCADE;
 CREATE TABLE users(
   username VARCHAR(50) PRIMARY KEY,
-  password CHAR(60) NOT NULL
+  password CHAR(60) NOT NULL,
   firstName VARCHAR,
   lastNAME VARCHAR,
   email VARCHAR
@@ -14,7 +14,7 @@ CREATE TABLE applications(
     company VARCHAR,
     industry VARCHAR,
     description VARCHAR
-)
+);
 
 DROP TABLE IF EXISTS jobs_to_user CASCADE;
 CREATE TABLE jobs_to_user(
