@@ -27,5 +27,14 @@ app.use(
 
 // TO DO: API endpoints
 
+app.get('/', (req, res) => {
+    res.redirect('/login');
+});
+
+app.get('/login', (req, res) => {
+    res.render('pages/login');
+});
+
+
 app.listen(3000);
 console.log('Server is listening on port 3000');
