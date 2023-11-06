@@ -59,26 +59,26 @@ app.post('/login', (req, res) => {
 app.get('/users/:userId/job-applications', (req, res) => {
   const queryOne = `SELECT jobID FROM jobs_to_user WHERE username = '${req.params.userId}'`;
 
-  db.any(queryOne)
-    .then( (jobId) => {
-      const jobIds = jobId.map( (job) => {
-        return job.jobid;
-      });
-
-      const queryTwo = `SELECT * FROM applications WHERE jobID = ANY (array[${jobIds}])`;
-
-      db.any(queryTwo)
-        .then( (jobs) => {
-          res.send(jobs);
-        })
-        .catch( (err) => {
-          console.log(err);
+  db.task(t => {
+      return t.any(queryOne)
+        .then(jobId => {
+          const jobIds = jobId.map( (job) => {
+            return job.jobid;
+          });
+          const queryTwo = `SELECT * FROM applications WHERE jobID = ANY (array[${jobIds}])`;
+          return t.any(queryTwo);
         });
-
+    })
+    .then( (jobs) => {
+      res.send(jobs);
     })
     .catch( (err) => {
       console.log(err);
     });
+});
+
+app.post('/users/:userId/job-applications', (req, res) => {
+
 });
 
 const port = process.env.PORT || 3000;
