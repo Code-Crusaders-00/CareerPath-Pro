@@ -6,18 +6,36 @@ const session = require('express-session'); // To set the session object. To sto
 const bcrypt = require('bcrypt'); //  To hash passwords
 
 // TO DO: Connect to database stuff
+const dbConfig = {
+  host: 'db', // the database server
+  port: 5432, // the database port
+  database: process.env.POSTGRES_DB, // the database name
+  user: process.env.POSTGRES_USER, // the user account to connect with
+  password: process.env.POSTGRES_PASSWORD, // the password of the user account
+};
+const db = pgp(dbConfig);
+
+// test your database
+db.connect()
+  .then(obj => {
+    console.log('Database connection successful'); // you can view this message in the docker compose logs
+    obj.done(); // success, release the connection;
+  })
+  .catch(error => {
+    console.log('ERROR:', error.message || error);
+  });
 
 app.set('view engine', 'ejs'); // set the view engine to EJS
 app.use(bodyParser.json()); // specify the usage of JSON for parsing request body.
 
 // initialize session variables
-app.use(
-  session({
-    secret: process.env.SESSION_SECRET,
-    saveUninitialized: false,
-    resave: false,
-  })
-);
+// app.use(
+//   session({
+//     secret: process.env.SESSION_SECRET,
+//     saveUninitialized: false,
+//     resave: false,
+//   })
+// );
 
 app.use(
   bodyParser.urlencoded({
@@ -26,15 +44,18 @@ app.use(
 );
 
 // TO DO: API endpoints
-
 app.get('/', (req, res) => {
-    res.redirect('/login');
+  res.redirect('/login');
 });
 
 app.get('/login', (req, res) => {
-    res.render('pages/login');
+  res.render('pages/login');
 });
 
+app.post('/login', (req, res) => {
 
-app.listen(3000);
+});
+
+const port = process.env.PORT || 3000;
+app.listen(port);
 console.log('Server is listening on port 3000');
