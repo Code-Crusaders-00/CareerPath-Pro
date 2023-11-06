@@ -78,7 +78,28 @@ app.get('/users/:userId/job-applications', (req, res) => {
 });
 
 app.post('/users/:userId/job-applications', (req, res) => {
+  const queryOne = `INSERT INTO applications
+                (name, company, industry, description)
+                VALUES
+                ('${req.body.name}','${req.body.company}','${req.body.industry}','${req.body.description}') RETURNING jobID`;
 
+  db.one(queryOne)
+    .then( (jobId) => {
+      const queryTwo = `INSERT INTO jobs_to_user (jobID, username)
+                        VALUES (${jobId}, '${req.params.userId}')`;
+
+      db.none(queryTwo)
+        .then( () => {
+          res.status(200);
+          res.redirect(`/users/${req.params.userId}/job-applications`);
+        })
+        .catch( (err) => {
+          console.log(err);
+        });
+    })
+    .catch( (err) => {
+      console.log(err);
+    });
 });
 
 const port = process.env.PORT || 3000;
