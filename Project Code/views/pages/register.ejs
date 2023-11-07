@@ -1,0 +1,56 @@
+<%- include ('../partials/head') %>
+<%- include ('../partials/nav') %>
+
+<main>
+    <style>
+        label {
+            display: inline-block;
+            width: 80px;
+            text-align: right;
+        }
+    </style>
+
+    <div class="border"
+        style="text-align: center; margin-left:auto; margin-right:auto;width:500px; margin-top:100px">
+        <h1 style="margin-top:30px">Register</h1>
+        <form action="/register" method="POST" style="margin-top:50px">
+
+            <div style="margin-bottom:20px;">
+                <label for="firstName">First Name: </label>
+                <input required type="text" id="firstName" name="firstName" />
+            </div>
+
+            <div style="margin-bottom:20px">
+                <label for="lastName">Last Name: </label>
+                <input required type="text" id="lastName" name="lastName" />
+            </div>
+
+            <div style="margin-bottom:20px;">
+                <label for="email">Email: </label>
+                <input required type="text" id="email" name="email" />
+            </div>
+
+            <div style="margin-bottom:20px">
+                <label for="username">Username: </label>
+                <input required type="text" id="username" name="username" />
+            </div>
+
+            <div>
+                <label for="password">Password: </label>
+                <input required type="text" id="password" name="password" />
+            </div>
+
+
+            <input style="margin-top:30px; margin-bottom: 30px; display:block; margin-right:auto;margin-left:auto"
+                type="submit" value="Register" />
+
+            <div style="margin-bottom:30px;">
+                <p>Already a user? <a href="/login">Login</a></p>
+            </div>
+    </div>
+    </form>
+    </div>
+
+</main>
+
+<%- include ('../partials/footer') %>
