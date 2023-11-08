@@ -118,3 +118,7 @@ const port = process.env.PORT || 3000;
 app.listen(port, () => {
   console.log(`Server is listening on port ${port}`);
 });
+
+app.get('/jobs', (req, res) => {
+  res.render('pages/jobBoard');
+});
