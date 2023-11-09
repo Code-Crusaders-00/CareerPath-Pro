@@ -1,10 +1,9 @@
 DROP TABLE IF EXISTS users CASCADE;
 CREATE TABLE users(
-  username VARCHAR(50) PRIMARY KEY,
   password CHAR(60) NOT NULL,
   firstName VARCHAR,
   lastNAME VARCHAR,
-  email VARCHAR
+  email VARCHAR PRIMARY KEY
 );
 
 DROP TABLE IF EXISTS applications CASCADE;
