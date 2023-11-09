@@ -3,7 +3,7 @@ CREATE TABLE users(
   password CHAR(60) NOT NULL,
   firstName VARCHAR,
   lastNAME VARCHAR,
-  email VARCHAR PRIMARY KEY,
+  email VARCHAR PRIMARY KEY
 );
 
 DROP TABLE IF EXISTS applications CASCADE;
