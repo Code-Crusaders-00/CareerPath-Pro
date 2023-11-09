@@ -53,7 +53,7 @@ app.get('/login', (req, res) => {
 });
 
 app.post('/login', (req, res) => {
-
+ // Implement Login
 });
 
 app.get('/register', (req, res) => {
@@ -62,10 +62,10 @@ app.get('/register', (req, res) => {
 
 app.post('/register', async (req, res) => {
     const hash = await bcrypt.hash(req.body.password, 10);
-    const query = `INSERT INTO users (username, password, firstName, lastName, email)
-                   VALUES ($1, $2, $3, $4, $5)`
+    const query = `INSERT INTO users (password, firstName, lastName, email)
+                   VALUES ($1, $2, $3, $4)`
     try {
-        await db.none(query, [req.body.username, hash, req.body.first_name, req.body.last_name, req.body.email]);
+        await db.none(query, [hash, req.body.first_name, req.body.last_name, req.body.email]);
         console.log(`Registered user ${req.body.username}`)
         res.redirect('/login');
     } catch (error) {
