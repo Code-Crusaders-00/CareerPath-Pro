@@ -16,15 +16,14 @@ jobs:
         node_version: [18.x]
     steps:
       - uses: actions/checkout@v3
-      - run: 'cd "Project Code"'
       - name: Use Node.js ${{ matrix.node_version }}
         uses: actions/setup-node@v3
         with:
           node-version: ${{ matrix.node_version }}
           cache: 'npm'
           cache-dependency-path: '**/package-lock.json'
-      - run: npm install
-      - run: npm test
+      - run: "cd 'Project Code' && npm install"
+      - run: "cd 'Project Code' && npm test"
         env:
           CI: true
 
