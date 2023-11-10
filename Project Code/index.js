@@ -176,17 +176,26 @@ app.get('/users/:userId/job-applications/:applicationId', (req, res) => {
         });
 });
 
-app.get('/jobs', (req, res) => {
-    res.render('pages/jobBoard');
+app.get('/jobs', async (req, res) => {
+  try {
+    const jobs = await db.any('SELECT * FROM jobs LIMIT 50 ');
+    res.render("pages/jobBoard", { jobs });
+  } catch (error) {
+    console.error(error);
+    res.render("pages/jobBoard", {
+      jobs: [],
+      error: true,
+      message: error.message,
+    });
+  }
 });
 
-const port = process.env.PORT || 3000; // Default to 3000 if no environment variable is set
-
-// Start the server only if we're not in a test environment
+const port = process.env.PORT || 3000;
 if (process.env.NODE_ENV !== 'test') {
-  app.listen(port, () => {
-    console.log(`Server is running on port ${port}`);
-  });
-}
+   app.listen(port, () => {
+     console.log(`Server is running on port ${port}`);
+   });
+ }
 
-module.exports = app;
+ module.exports = app;
+
