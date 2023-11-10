@@ -57,7 +57,7 @@ app.post('/login', (req, res) => {
     const query = "select * from users where email = $1";
     const values = [email];
 
-    if (username != null) {
+    if (email != null) {
         try {
             const data = db.oneOrNone(query, values); // Use oneOrNone instead of one
             if (data) {
