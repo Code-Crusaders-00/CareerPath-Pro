@@ -1,5 +1,5 @@
 <header>
-    <nav class="navbar navbar-expand-sm border-bottom">
+    <nav class="navbar navbar-expand-sm border-bottom bg-body-tertiary">
         <div class="container">
             <button
                     class="navbar-toggler ms-auto"
@@ -15,24 +15,29 @@
                 <ul class="navbar-nav me-auto">
                     <!--
                     <li class="nav-item">
-                        <a href="/route">Text</a>
+                        <a class="nav-link" href="/route">Text</a>
                     </li>
                     -->
+                    <% if (!locals.user) { %>
                     <li class="nav-item">
-                        <a href="/register">Register</a>
+                        <a class="nav-link" href="/register">Register</a>
                     </li>
                     <li class="nav-item">
-                        <a href="/login" style="margin-left: 20px;">Login</a>
+                        <a class="nav-link" href="/login" style="margin-left: 20px;">Login</a>
                     </li>
+                    <% } %>
                     <% if (locals.user) { %>
                     <li class="nav-item">
-                        <a href="/jobBoard" style="margin-left: 20px;">Job Board</a>
+                        <a class="nav-link" href="/home">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/jobs" style="margin-left: 20px;">Job Board</a>
                     </li>
                     <% } %>
                 </ul>
                 <% if (locals.user) { %> 
                 <div class="nav-item me-1">
-                    <a href="/logout">Logout</a>
+                    <a class="nav-link" href="/logout">Logout</a>
                 </div>
                 <% } %>
             </div>
