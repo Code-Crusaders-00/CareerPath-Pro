@@ -28,14 +28,14 @@ db.connect()
 app.set('view engine', 'ejs'); // set the view engine to EJS
 app.use(bodyParser.json()); // specify the usage of JSON for parsing request body.
 
-// initialize session variables
-// app.use(
-//   session({
-//     secret: process.env.SESSION_SECRET,
-//     saveUninitialized: false,
-//     resave: false,
-//   })
-// );
+//initialize session variables
+app.use(
+    session({
+        secret: process.env.SESSION_SECRET,
+        saveUninitialized: false,
+        resave: false,
+    })
+);
 
 app.use(
     bodyParser.urlencoded({
@@ -52,7 +52,7 @@ app.get('/login', (req, res) => {
     res.render('pages/login');
 });
 
-app.post('/login', (req, res) => {
+app.post('/login', async (req, res) => {
 
     const email = req.body.email;
     const query = "select * from users where email = $1";
@@ -60,9 +60,10 @@ app.post('/login', (req, res) => {
 
     if (email != null) {
         try {
-            const data = db.oneOrNone(query, values); // Use oneOrNone instead of one
+            const data = await db.oneOrNone(query, values); // Use oneOrNone instead of one
             if (data) {
-                const match = bcrypt.compare(req.body.password, data.password);
+                console.log("User data:", data);
+                const match = await bcrypt.compare(req.body.password, data.password);
                 if (match) {
                     console.log("Password is correct");
                     const user = {
@@ -101,8 +102,8 @@ app.post('/register', async (req, res) => {
     const query = `INSERT INTO users (password, firstName, lastName, email)
                    VALUES ($1, $2, $3, $4)`
     try {
-        await db.none(query, [hash, req.body.first_name, req.body.last_name, req.body.email]);
-        console.log(`Registered user ${req.body.username}`)
+        await db.none(query, [hash, req.body.firstNAME, req.body.lastNAME, req.body.email]);
+        console.log(`Registered user ${req.body.firstNAME}`)
         res.redirect('/login');
     } catch (error) {
         console.log(`Failed to register user: ${error}`);
