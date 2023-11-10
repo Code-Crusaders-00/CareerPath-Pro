@@ -24,13 +24,17 @@
                     <li class="nav-item">
                         <a href="/login" style="margin-left: 20px;">Login</a>
                     </li>
+                    <% if (locals.user) { %>
                     <li class="nav-item">
                         <a href="/jobBoard" style="margin-left: 20px;">Job Board</a>
                     </li>
+                    <% } %>
                 </ul>
+                <% if (locals.user) { %> 
                 <div class="nav-item me-1">
                     <a href="/logout">Logout</a>
                 </div>
+                <% } %>
             </div>
         </div>
     </nav>
