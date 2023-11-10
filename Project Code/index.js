@@ -200,7 +200,6 @@ app.get('/api/users/:userId/job-applications/:applicationId', (req, res) => {
 });
 
 app.get('/login', (req, res) => {
-    console.log(req.session.user);
     res.render('pages/login', {user: req.session.user, error: req.session.error});
     if (typeof req.session.error !== 'undefined') {
         console.log("Error:", req.session.error, "Type:", typeof req.session.error);
@@ -274,7 +273,7 @@ const auth = (req, res, next) => {
   app.use(auth);
   
 app.get('/home', (req, res) => {
-    res.render('pages/home', req.session.user);
+    res.render('pages/home', {user: req.session.user, error: req.session.error });
 });
   
   app.get('/logout', (req, res) => {
@@ -289,7 +288,8 @@ app.get('/jobs', async (req, res) => {
     const jobs = await fetch("http://localhost:3000/api/jobs?limit=50").then((res) =>
         res.json()
     );
-    res.render("pages/jobBoard", { jobs });
+    //res.render("pages/jobBoard", { jobs});
+    res.render("pages/jobBoard", {jobs, user: req.session.user, error: req.session.error});
   } catch (error) {
     console.error(error);
     res.render("pages/jobBoard", {
