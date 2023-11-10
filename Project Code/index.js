@@ -176,10 +176,6 @@ app.get('/users/:userId/job-applications/:applicationId', (req, res) => {
         });
 });
 
-app.get('/jobs', (req, res) => {
-  const query = `SELECT * FROM applications WHERE jobID = '${req.params.applicationId}'`;
-});
-
 app.get('/jobs', async (req, res) => {
   try {
     const jobs = await db.any('SELECT * FROM jobs LIMIT 50 ');
@@ -195,7 +191,11 @@ app.get('/jobs', async (req, res) => {
 });
 
 const port = process.env.PORT || 3000;
-app.listen(port, () => {
-    console.log(`Server is listening on port ${port}`);
-});
+if (process.env.NODE_ENV !== 'test') {
+   app.listen(port, () => {
+     console.log(`Server is running on port ${port}`);
+   });
+ }
+
+ module.exports = app;
 
