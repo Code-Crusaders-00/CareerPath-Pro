@@ -53,7 +53,42 @@ app.get('/login', (req, res) => {
 });
 
 app.post('/login', (req, res) => {
+    const email = req.body.email;
+    const query = "select * from users where email = $1";
+    const values = [email];
 
+    if (username != null) {
+        try {
+            const data = db.oneOrNone(query, values); // Use oneOrNone instead of one
+            if (data) {
+                const match = bcrypt.compare(req.body.password, data.password);
+                if (match) {
+                    console.log("Password is correct");
+                    const user = {
+                        firstNAME: data.firstNAME,
+                        lastNAME: data.lastNAME,
+                        email: data.email,
+                        password: data.password
+                    };
+                    req.session.user = user;
+                    req.session.save();
+                    res.redirect('/home');
+                } else {
+                    console.log("Invalid Password");
+                    res.redirect("/login");
+                }
+            } else {
+                console.log("User not found");
+                res.redirect("/register");
+            }
+        } catch (err) {
+            console.error("Error during login:", err);
+            res.redirect("/login");
+        }
+    } else {
+        console.log("No Username Provided.");
+        res.redirect("/login");
+    }
 });
 
 app.get('/register', (req, res) => {
@@ -62,10 +97,10 @@ app.get('/register', (req, res) => {
 
 app.post('/register', async (req, res) => {
     const hash = await bcrypt.hash(req.body.password, 10);
-    const query = `INSERT INTO users (username, password, firstName, lastName, email)
-                   VALUES ($1, $2, $3, $4, $5)`
+    const query = `INSERT INTO users (password, firstName, lastName, email)
+                   VALUES ($1, $2, $3, $4)`
     try {
-        await db.none(query, [req.body.username, hash, req.body.first_name, req.body.last_name, req.body.email]);
+        await db.none(query, [hash, req.body.first_name, req.body.last_name, req.body.email]);
         console.log(`Registered user ${req.body.username}`)
         res.redirect('/login');
     } catch (error) {
