@@ -28,8 +28,8 @@ const urlRegex = /<a href="(https:\/\/[^"]+?)(?:\?.+?)?"/;
 
 data = [];
 
-
 var previous_company = ""; // The provided table uses `↳` to idicate that the company is the same as the previous row
+
 
 function formatDateForPostgres(dateString) {
   const currentYear = new Date().getFullYear();
@@ -169,9 +169,11 @@ request(link_to_md, function (error, response, body) {
         }
         // Insert the data into the database table `jobs`
 
-        const cs = new pgp.helpers.ColumnSet(['company', 'role', 'requires_us_citizenship', 'offers_sponsorship', 'date_posted', 'location', 'application_link', 'internship'], {table: 'jobs'});
-
-        const query = pgp.helpers.insert(data, cs);
+        const cs = new pgp.helpers.ColumnSet(
+            ['company', 'role', 'requires_us_citizenship', 'offers_sponsorship', 
+                'date_posted', 'location', 'application_link', 'internship'], {table: 'jobs'});
+        // Add ignoreDuplicates: true to ignore duplicate rows
+        const query = pgp.helpers.insert(data, cs) + " ON CONFLICT (application_link) DO NOTHING";
 
         db.none(query)
             .then(() => {
