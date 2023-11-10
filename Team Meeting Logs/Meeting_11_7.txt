@@ -1,0 +1,17 @@
+Week 1 Sync:
+
+- Project deliverables for this week have been completed
+    - Wireframe is created
+    - Google docs to submit is complete
+- Ejs files are almost complete
+- Job application page is accessible- still a work in progress
+- Clarified as a group on how to commit and merge into github
+   - We are setting a system to have one person approve the code before it is merged into main
+- API is established for the job application website
+
+Next Week's Deliverables:
+
+- All domain pages to be working and connected
+- Jobs page to pull applications from the API
+- EJS files to be completed
+

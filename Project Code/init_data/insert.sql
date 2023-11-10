@@ -1,9 +1,9 @@
-INSERT INTO users (username, password, firstName, lastNAME, email) VALUES
-('user1', 'pass1', 'user', '1', 'user1@gmail.com'),
-('user2', 'pass2', 'user', '2', 'user2@gmail.com'),
-('user3', 'pass3', 'user', '3', 'user3@gmail.com'),
-('user4', 'pass4', 'user', '4', 'user4@gmail.com'),
-('user5', 'pass5', 'user', '5', 'user5@gmail.com');
+INSERT INTO users (password, firstName, lastNAME, email) VALUES
+( '$2b$10$KqcaD9PwuWwrietIJJSkFOWuWIdDQau6JezCBHd.CEJAtpmvp0MWe', 'user', '1', 'user1@gmail.com'),
+( '$2b$10$bRraxfxx1NBym1I1OHTTZuJw2xbmtaJE1ciNC1jZh41wo3lYJAKAa', 'user', '2', 'user2@gmail.com'),
+( '$2b$10$PglN5tMpEhrmOUJSS/LheOiMaSDzRQ2CyEXJTqr8v4gYv63IXtSN2', 'user', '3', 'user3@gmail.com'),
+( '$2b$10$9aHxZHSSxHUmhCy9fpr1mOtBBdpZRtp49UhRhLcFqRHCkv6ijSSGq', 'user', '4', 'user4@gmail.com'),
+( '$2b$10$xCmB8HrtD7naT1wxFntAbut3vPn2bswfcfp1MkOW3s07dcqzYBmhe', 'user', '5', 'user5@gmail.com');
 
 INSERT INTO applications (jobID, name, company, industry, description) VALUES
 (1, 'Software Intern 1', 'Google', 'Tech', 'This be a cool job'),
