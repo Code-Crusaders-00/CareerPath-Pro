@@ -10,12 +10,19 @@
         "express": "^4.6.1",
         "express-session": "1.17.3",
         "marked": "^9.1.5",
-        "nodemon": "2.0.20",
         "pg-promise": "^10.11.1",
         "request": "^2.88.2"
     },
     "scripts": {
         "prestart": "npm install",
-        "start": "nodemon index.js"
+        "start": "nodemon index.js",
+        "test": "NODE_ENV=test PORT=5000 mocha"
+    },
+    "devDependencies": {
+        "chai": "^4.3.10",
+        "chai-http": "^4.4.0",
+        "mocha": "^10.2.0",
+        "nodemon": "^3.0.1",
+        "npm-run-all": "^4.1.5"
     }
 }
