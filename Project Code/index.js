@@ -139,11 +139,26 @@ app.get('/users/:userId/job-applications/:applicationId', (req, res) => {
         });
 });
 
+app.get('/jobs', (req, res) => {
+  const query = `SELECT * FROM applications WHERE jobID = '${req.params.applicationId}'`;
+});
+
+app.get('/jobs', async (req, res) => {
+  try {
+    const jobs = await db.any('SELECT * FROM jobs LIMIT 50 ');
+    res.render("pages/jobBoard", { jobs });
+  } catch (error) {
+    console.error(error);
+    res.render("pages/jobBoard", {
+      jobs: [],
+      error: true,
+      message: error.message,
+    });
+  }
+});
+
 const port = process.env.PORT || 3000;
 app.listen(port, () => {
     console.log(`Server is listening on port ${port}`);
 });
 
-app.get('/jobs', (req, res) => {
-    res.render('pages/jobBoard');
-});
