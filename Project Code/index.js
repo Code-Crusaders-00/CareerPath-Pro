@@ -53,6 +53,7 @@ app.get('/login', (req, res) => {
 });
 
 app.post('/login', (req, res) => {
+
     const email = req.body.email;
     const query = "select * from users where email = $1";
     const values = [email];
