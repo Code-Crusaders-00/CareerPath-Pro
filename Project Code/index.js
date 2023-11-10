@@ -66,7 +66,7 @@ app.post('/register', async (req, res) => {
     }
 })
 
-app.get('/users/:userId/job-applications', (req, res) => {
+app.get('/api/users/:userId/job-applications', (req, res) => {
     const queryOne = `SELECT jobID
                       FROM jobs_to_user
                       WHERE username = '${req.params.userId}'`;
@@ -91,7 +91,7 @@ app.get('/users/:userId/job-applications', (req, res) => {
         });
 });
 
-app.post('/users/:userId/job-applications', (req, res) => {
+app.post('/api/users/:userId/job-applications', (req, res) => {
     const queryOne = `INSERT INTO applications
                           (name, company, industry, description)
                       VALUES ('${req.body.name}', '${req.body.company}', '${req.body.industry}',
@@ -117,7 +117,7 @@ app.post('/users/:userId/job-applications', (req, res) => {
         });
 });
 
-app.get('/users/:userId/job-applications/:applicationId', (req, res) => {
+app.get('/api/users/:userId/job-applications/:applicationId', (req, res) => {
     const query = `SELECT *
                    FROM applications
                    WHERE jobID = '${req.params.applicationId}'`;
@@ -150,8 +150,8 @@ app.post('/login', async (req, res) => {
                 if (match) {
                     console.log("Password is correct");
                     const user = {
-                        firstNAME: data.firstNAME,
-                        lastNAME: data.lastNAME,
+                        firstName: data.firstname,
+                        lastName: data.lastname,
                         email: data.email,
                         password: data.password
                     };
@@ -188,6 +188,9 @@ const auth = (req, res, next) => {
   // Authentication Required
   app.use(auth);
   
+app.get('/home', (req, res) => {
+    res.render('pages/home', req.session.user);
+});
   
   app.get('/logout', (req, res) => {
       req.session.destroy();
