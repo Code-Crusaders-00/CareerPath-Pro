@@ -48,51 +48,6 @@ app.get('/', (req, res) => {
     res.redirect('/login');
 });
 
-app.get('/login', (req, res) => {
-    res.render('pages/login');
-});
-
-app.post('/login', async (req, res) => {
-
-    const email = req.body.email;
-    const query = "select * from users where email = $1";
-    const values = [email];
-
-    if (email != null) {
-        try {
-            const data = await db.oneOrNone(query, values); // Use oneOrNone instead of one
-            if (data) {
-                console.log("User data:", data);
-                const match = await bcrypt.compare(req.body.password, data.password);
-                if (match) {
-                    console.log("Password is correct");
-                    const user = {
-                        firstNAME: data.firstNAME,
-                        lastNAME: data.lastNAME,
-                        email: data.email,
-                        password: data.password
-                    };
-                    req.session.user = user;
-                    req.session.save();
-                    res.redirect('/home');
-                } else {
-                    console.log("Invalid Password");
-                    res.redirect("/login");
-                }
-            } else {
-                console.log("User not found");
-                res.redirect("/register");
-            }
-        } catch (err) {
-            console.error("Error during login:", err);
-            res.redirect("/login");
-        }
-    } else {
-        console.log("No Username Provided.");
-        res.redirect("/login");
-    }
-});
-
 app.get('/register', (req, res) => {
     res.render('pages/register');
 });
@@ -175,6 +130,69 @@ app.get('/users/:userId/job-applications/:applicationId', (req, res) => {
             console.log(err);
         });
 });
+
+app.get('/login', (req, res) => {
+    res.render('pages/login');
+});
+
+app.post('/login', async (req, res) => {
+
+    const email = req.body.email;
+    const query = "select * from users where email = $1";
+    const values = [email];
+
+    if (email != null) {
+        try {
+            const data = await db.oneOrNone(query, values); // Use oneOrNone instead of one
+            if (data) {
+                console.log("User data:", data);
+                const match = await bcrypt.compare(req.body.password, data.password);
+                if (match) {
+                    console.log("Password is correct");
+                    const user = {
+                        firstNAME: data.firstNAME,
+                        lastNAME: data.lastNAME,
+                        email: data.email,
+                        password: data.password
+                    };
+                    req.session.user = user;
+                    req.session.save();
+                    res.redirect('/home');
+                } else {
+                    console.log("Invalid Password");
+                    res.redirect("/login");
+                }
+            } else {
+                console.log("User not found");
+                res.redirect("/register");
+            }
+        } catch (err) {
+            console.error("Error during login:", err);
+            res.redirect("/login");
+        }
+    } else {
+        console.log("No Username Provided.");
+        res.redirect("/login");
+    }
+});
+
+// Authentication Middleware.
+const auth = (req, res, next) => {
+    if (!req.session.user) {
+      // Default to login page.
+      return res.redirect('/login');
+    }
+    next();
+  };
+  
+  // Authentication Required
+  app.use(auth);
+  
+  
+  app.get('/logout', (req, res) => {
+      req.session.destroy();
+      res.redirect('/login');
+  });
 
 app.get('/jobs', async (req, res) => {
   try {

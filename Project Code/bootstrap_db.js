@@ -24,10 +24,6 @@ db.connect().then(obj => {
     console.log(error);
 });
 
-// Read the markdown content from a file
-const markdownFilePath = path.join(__dirname, 'README.md');
-const markdownContent = fs.readFileSync(markdownFilePath, 'utf8');
-
 const urlRegex = /<a href="(https:\/\/[^"]+?)(?:\?.+?)?"/;
 
 data = [];
