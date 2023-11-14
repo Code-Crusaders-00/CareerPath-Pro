@@ -9,11 +9,17 @@ CREATE TABLE users(
 
 DROP TABLE IF EXISTS applications CASCADE;
 CREATE TABLE applications(
-    jobID SERIAL PRIMARY KEY,
+    appID SERIAL PRIMARY KEY,
     name VARCHAR,
     company VARCHAR,
     industry VARCHAR,
     description VARCHAR
+);
+
+DROP TABLE IF EXISTS user_to_applications CASCADE;
+CREATE TABLE user_to_applications(
+    userID INTEGER,
+    appID INTEGER
 );
 
 DROP TABLE IF EXISTS jobs_to_user CASCADE;
