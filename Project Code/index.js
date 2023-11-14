@@ -108,7 +108,7 @@ app.get('/api/jobs', async (req, res) => {
             conditions.push('internship = $' + (conditions.length + 1));
             parameters.push(internship === 'true');
         }
-        
+
         // Combine the conditions using 'AND'
         if (conditions.length > 0) {
             query += ' WHERE ' + conditions.join(' AND ');
@@ -121,7 +121,7 @@ app.get('/api/jobs', async (req, res) => {
             if (isNaN(count) || count > 1000) {
                 count = 20;
             }
-        } 
+        }
 
         query += ` LIMIT ${count}`;
 
@@ -223,6 +223,7 @@ app.post('/login', async (req, res) => {
                 if (match) {
                     console.log("Password is correct");
                     const user = {
+                        userid: data.userid,
                         firstName: data.firstname,
                         lastName: data.lastname,
                         email: data.email,
@@ -267,15 +268,15 @@ const auth = (req, res, next) => {
         return res.redirect('/login');
     }
     next();
-  };
-  
-  // Authentication Required
-  app.use(auth);
-  
+};
+
+// Authentication Required
+app.use(auth);
+
 app.get('/home', (req, res) => {
     res.render('pages/home', {user: req.session.user, error: req.session.error });
 });
-  
+
   app.get('/logout', (req, res) => {
       req.session.destroy();
       res.redirect('/login');
@@ -308,4 +309,3 @@ if (process.env.NODE_ENV !== 'test') {
  }
 
  module.exports = app;
-
