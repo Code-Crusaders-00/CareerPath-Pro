@@ -193,10 +193,10 @@ request(link_to_md, function (error, response, body) {
 });
 }
 
-const summer_internships_link = "https://raw.githubusercontent.com/SimplifyJobs/Summer2024-Internships/dev/README.md";
+const summer_internships_link = "https://raw.githubusercontent.com/SimplifyJobs/Summer2024-Internships/a97f420aebc92c82342cc42daa73fe94c7362ccc/README.md";
 const new_grad_link = "https://raw.githubusercontent.com/SimplifyJobs/New-Grad-Positions/dev/README.md"
 
 parse_and_insert(summer_internships_link, is_internship=true)
-parse_and_insert(new_grad_link, is_internship=false)
+//parse_and_insert(new_grad_link, is_internship=false)
 
 
