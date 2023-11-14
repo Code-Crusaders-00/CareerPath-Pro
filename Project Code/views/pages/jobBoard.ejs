@@ -2,28 +2,26 @@
 <%- include ('../partials/nav') %>
 
 <main>
-    <div class="container">
-      
-      <!-- THE REST OF YOUR HTML CODE GOES HERE -->
-      <% if (locals.message) { %>
-        <div class="alert alert-<%- locals.error ? 'danger' : 'success' %>" role="alert">
-          <%= message %>
-        </div>
-      <% } %>
-
-      <% jobs.forEach(jobs => {   %>
-        <div class="card" style="width: 30rem;">
+    <div class="container mb-4">
+     <div class="row mt-5"> 
+      <% jobs.forEach(job => {   %>
+      <div class="col-md-4 mb-4">
+        <div class="card" style="width: 100%;">
           
           <!-- <img src="..." class="card-img-top" alt="..."> -->
           <div class="card-body">
-            <h5 class="card-title"><%=jobs.role%></h5>
-            <p class="card-text">Company: <%=jobs.company %></p>
-            <p class="card-text">Location: <%=jobs.location %></p>
-            <p class="card-text">Date Posted: <%=jobs.date_posted %></p>
+            <h5 class="card-title"><%=job.role%></h5>
+            <p class="card-text">Company: <%=job.company %></p>
+            <p class="card-text">Location: <%=job.location %></p>
+            <p class="card-text">Date Posted: <%=job.date_posted %></p>
             
-            <a href="<%=jobs.application_link%>" class="btn btn-primary">Apply</a>
+            <a href="<%=job.application_link%>" class="btn btn-primary">Apply</a>
           </div>
-        </div><br>
+        </div>
+        </div>
+        <% if (jobs.indexOf(job) % 3 == 2) { %>
+        </div><div class="row">
+        <% } %>
       <% }) %>
   
       

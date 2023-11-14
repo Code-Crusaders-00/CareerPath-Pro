@@ -1,52 +1,36 @@
 <%- include ('../partials/head') %>
 <%- include ('../partials/nav') %>
+<%- include ('../partials/alerts') %>'
 
-<main>
-    <style>
-        label {
-            display: inline-block;
-            width: 80px;
-            text-align: right;
-        }
-    </style>
-
-    <div class="border"
-        style="text-align: center; margin-left:auto; margin-right:auto;width:500px; margin-top:100px">
-        <h1 style="margin-top:30px">Register</h1>
-        <form action="/register" method="POST" style="margin-top:50px">
-
-            <div style="margin-bottom:20px;">
-                <label for="firstNAME">First Name: </label>
-                <input required type="text" id="firstNAME" name="firstNAME" />
+<div class="container">
+        <div class="row justify-content-center align-items-center" style="height:100vh;">
+            <div class="col-md-4">
+                <div class="border p-4">
+                    <!-- Registration Form -->
+                        <h2 class="text-center mb-4">Register</h2>
+                    <form action="/register" method="POST">
+                        <div class="form-group mb-3">
+                            <label for="inputFirstName">First Name</label>
+                            <input type="text" class="form-control" name="firstNAME" id="inputFirstName" placeholder="Enter first name" required>
+                        </div>
+                        <div class="form-group mb-3">
+                            <label for="inputLastName">Last Name</label>
+                            <input type="text" class="form-control" name="lastNAME" id="inputLastName" placeholder="Enter last name" required>
+                        </div>
+                        <div class="form-group mb-3">
+                            <label for="inputEmail">Email address</label>
+                            <input type="email" class="form-control" name="email" id="inputEmail" placeholder="Enter email" required>
+                        </div>
+                        <div class="form-group mb-3">
+                            <label for="inputPassword">Password</label>
+                            <input type="password" class="form-control" name="password" id="inputPassword" placeholder="Password" required>
+                        </div>
+                        <button type="submit" class="btn btn-primary btn-block">Register</button>
+                    </form>
+                    <!-- /Registration Form -->
+                </div>
             </div>
-
-            <div style="margin-bottom:20px">
-                <label for="lastNAME">Last Name: </label>
-                <input required type="text" id="lastNAME" name="lastNAME" />
-            </div>
-
-            <div style="margin-bottom:20px;">
-                <label for="email">Email: </label>
-                <input required type="email" id="email" name="email" />
-            </div>
-
-
-            <div>
-                <label for="password">Password: </label>
-                <input required type="password" id="password" name="password" />
-            </div>
-
-
-            <input style="margin-top:30px; margin-bottom: 30px; display:block; margin-right:auto;margin-left:auto"
-                type="submit" value="Register" />
-
-            <div style="margin-bottom:30px;">
-                <p>Already a user? <a href="/login">Login</a></p>
-            </div>
+        </div>
     </div>
-    </form>
-    </div>
-
-</main>
 
 <%- include ('../partials/footer') %>

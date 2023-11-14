@@ -49,7 +49,7 @@ app.get('/', (req, res) => {
 });
 
 app.get('/register', (req, res) => {
-    res.render('pages/register');
+    res.render('pages/register', {error: req.session.error});
 });
 
 app.post('/register', async (req, res) => {
@@ -58,15 +58,83 @@ app.post('/register', async (req, res) => {
                    VALUES ($1, $2, $3, $4)`
     try {
         await db.none(query, [hash, req.body.firstNAME, req.body.lastNAME, req.body.email]);
-        console.log(`Registered user ${req.body.firstNAME}`)
+        console.log(`Registered user ${req.body.firstNAME}`);
+        req.session.error = {
+            err_level: "success",
+            err_msg: "You have successfully registered. Please login."
+        }
         res.redirect('/login');
     } catch (error) {
         console.log(`Failed to register user: ${error}`);
+        req.session.error = {
+            err_level: "danger",
+            err_msg: "Failed to register user. Please try again. Error: " + error.message || error
+        }
         res.redirect('/register');
     }
 })
 
-app.get('/users/:userId/job-applications', (req, res) => {
+// READ all jobs with optional filtering
+app.get('/api/jobs', async (req, res) => {
+    let count = 5;
+    try {
+        const { company, role, location, offers_sponsorship, requires_us_citizenship, internship, limit} = req.query;
+        let query = 'SELECT * FROM jobs';
+        const conditions = [];
+        const parameters = [];
+
+        // Add conditions for filtering
+        if (company) {
+            conditions.push('company = $' + (conditions.length + 1));
+            parameters.push(company);
+        }
+        if (role) {
+            conditions.push('role = $' + (conditions.length + 1));
+            parameters.push(role);
+        }
+        if (location) {
+            conditions.push('location = $' + (conditions.length + 1));
+            parameters.push(location);
+        }
+        if (offers_sponsorship != null) {
+            conditions.push('offers_sponsorship = $' + (conditions.length + 1));
+            parameters.push(offers_sponsorship === 'true');
+        }
+        if (requires_us_citizenship != null) {
+            conditions.push('requires_us_citizenship = $' + (conditions.length + 1));
+            parameters.push(requires_us_citizenship === 'true');
+        }
+        if (internship != null) {
+            conditions.push('internship = $' + (conditions.length + 1));
+            parameters.push(internship === 'true');
+        }
+        
+        // Combine the conditions using 'AND'
+        if (conditions.length > 0) {
+            query += ' WHERE ' + conditions.join(' AND ');
+        }
+
+        // Add limit
+        if (limit != null) {
+            count = parseInt(limit);
+            // make sure count is a number and less than 1000
+            if (isNaN(count) || count > 1000) {
+                count = 20;
+            }
+        } 
+
+        query += ` LIMIT ${count}`;
+
+
+        const jobs = await db.any(query, parameters);
+        res.status(200).json(jobs);
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+});
+
+
+app.get('/api/users/:userId/job-applications', (req, res) => {
     const queryOne = `SELECT jobID
                       FROM jobs_to_user
                       WHERE username = '${req.params.userId}'`;
@@ -91,7 +159,7 @@ app.get('/users/:userId/job-applications', (req, res) => {
         });
 });
 
-app.post('/users/:userId/job-applications', (req, res) => {
+app.post('/api/users/:userId/job-applications', (req, res) => {
     const queryOne = `INSERT INTO applications
                           (name, company, industry, description)
                       VALUES ('${req.body.name}', '${req.body.company}', '${req.body.industry}',
@@ -117,7 +185,7 @@ app.post('/users/:userId/job-applications', (req, res) => {
         });
 });
 
-app.get('/users/:userId/job-applications/:applicationId', (req, res) => {
+app.get('/api/users/:userId/job-applications/:applicationId', (req, res) => {
     const query = `SELECT *
                    FROM applications
                    WHERE jobID = '${req.params.applicationId}'`;
@@ -132,7 +200,12 @@ app.get('/users/:userId/job-applications/:applicationId', (req, res) => {
 });
 
 app.get('/login', (req, res) => {
-    res.render('pages/login');
+    res.render('pages/login', {user: req.session.user, error: req.session.error});
+    if (typeof req.session.error !== 'undefined') {
+        console.log("Error:", req.session.error, "Type:", typeof req.session.error);
+        req.session.error = undefined;
+        req.session.save();
+    }
 });
 
 app.post('/login', async (req, res) => {
@@ -150,8 +223,8 @@ app.post('/login', async (req, res) => {
                 if (match) {
                     console.log("Password is correct");
                     const user = {
-                        firstNAME: data.firstNAME,
-                        lastNAME: data.lastNAME,
+                        firstName: data.firstname,
+                        lastName: data.lastname,
                         email: data.email,
                         password: data.password
                     };
@@ -160,11 +233,19 @@ app.post('/login', async (req, res) => {
                     res.redirect('/home');
                 } else {
                     console.log("Invalid Password");
+                    req.session.error = {
+                        err_level: "danger",
+                        err_msg: "Invalid Email or Password. To Register, click the Register button."
+                    }
                     res.redirect("/login");
                 }
             } else {
                 console.log("User not found");
-                res.redirect("/register");
+                req.session.error = {
+                    err_level: "danger",
+                    err_msg: "Invalid Email or Password. To Register, click the Register button."
+                }
+                res.redirect("/login");
             }
         } catch (err) {
             console.error("Error during login:", err);
@@ -179,8 +260,11 @@ app.post('/login', async (req, res) => {
 // Authentication Middleware.
 const auth = (req, res, next) => {
     if (!req.session.user) {
-      // Default to login page.
-      return res.redirect('/login');
+        req.session.error = {
+            err_level: "danger",
+            err_msg: "You must be logged in to view this page."
+        }
+        return res.redirect('/login');
     }
     next();
   };
@@ -188,6 +272,9 @@ const auth = (req, res, next) => {
   // Authentication Required
   app.use(auth);
   
+app.get('/home', (req, res) => {
+    res.render('pages/home', {user: req.session.user, error: req.session.error });
+});
   
   app.get('/logout', (req, res) => {
       req.session.destroy();
@@ -196,8 +283,13 @@ const auth = (req, res, next) => {
 
 app.get('/jobs', async (req, res) => {
   try {
-    const jobs = await db.any('SELECT * FROM jobs LIMIT 50 ');
-    res.render("pages/jobBoard", { jobs });
+    //const jobs = await db.any('SELECT * FROM jobs LIMIT 50 ');
+    // Make request to API
+    const jobs = await fetch("http://localhost:3000/api/jobs?limit=50").then((res) =>
+        res.json()
+    );
+    //res.render("pages/jobBoard", { jobs});
+    res.render("pages/jobBoard", {jobs, user: req.session.user, error: req.session.error});
   } catch (error) {
     console.error(error);
     res.render("pages/jobBoard", {

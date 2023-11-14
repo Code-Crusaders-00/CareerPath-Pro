@@ -32,5 +32,6 @@ CREATE TABLE jobs(
     application_link VARCHAR,
     offers_sponsorship BOOLEAN DEFAULT TRUE,
     requires_us_citizenship BOOLEAN DEFAULT TRUE,
-    internship BOOLEAN DEFAULT FALSE
+    internship BOOLEAN DEFAULT FALSE,
+    UNIQUE (application_link)
 );
