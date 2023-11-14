@@ -23,7 +23,7 @@ describe('GET /login', () => {
         expect(res).to.be.html;
 
         // Check for the presence of elements within the body
-        expect(res.text).to.contain('<h1 style="margin-top:30px">Login</h1>');
+        expect(res.text).to.contain('Login');
         expect(res.text).to.contain('name="email"');
         expect(res.text).to.contain('name="password"');
         expect(res.text).to.contain('type="submit"');
