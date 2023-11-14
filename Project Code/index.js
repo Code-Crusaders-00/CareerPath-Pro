@@ -133,32 +133,6 @@ app.get('/api/jobs', async (req, res) => {
     }
 });
 
-
-app.get('/api/users/:userId/job-applications', (req, res) => {
-    const queryOne = `SELECT jobID
-                      FROM jobs_to_user
-                      WHERE username = '${req.params.userId}'`;
-
-    db.task(t => {
-        return t.any(queryOne)
-            .then(jobId => {
-                const jobIds = jobId.map((job) => {
-                    return job.jobid;
-                });
-                const queryTwo = `SELECT *
-                                  FROM applications
-                                  WHERE jobID = ANY (array [${jobIds}])`;
-                return t.any(queryTwo);
-            });
-    })
-        .then((jobs) => {
-            res.send(jobs);
-        })
-        .catch((err) => {
-            console.log(err);
-        });
-});
-
 app.post('/api/users/:userId/job-applications', (req, res) => {
     const queryOne = `INSERT INTO applications
                           (name, company, industry, description)
@@ -299,6 +273,34 @@ app.get('/jobs', async (req, res) => {
       message: error.message,
     });
   }
+});
+
+app.get('/api/users/:userId/job-applications', (req, res) => {
+    const queryOne = `SELECT appID
+                      FROM user_to_applications
+                      WHERE userID = '${req.params.userId}'`;
+
+    db.task(t => {
+        return t.any(queryOne)
+            .then(appIds => {
+                const appIdsArr = appIds.map((app) => {
+                    return app.appid;
+                });
+                if (appIdsArr.length == 0) {
+                    return [];
+                }
+                const queryTwo = `SELECT *
+                                  FROM applications
+                                  WHERE appID = ANY (array [${appIdsArr}])`;
+                return t.any(queryTwo);
+            });
+    })
+        .then((appArr) => {
+            res.render('pages/applications', {apps: appArr});
+        })
+        .catch((err) => {
+            console.log(err);
+        });
 });
 
 const port = process.env.PORT || 3000;
