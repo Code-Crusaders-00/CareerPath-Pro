@@ -159,20 +159,6 @@ app.post('/api/users/:userId/job-applications', (req, res) => {
         });
 });
 
-app.get('/api/users/:userId/job-applications/:applicationId', (req, res) => {
-    const query = `SELECT *
-                   FROM applications
-                   WHERE jobID = '${req.params.applicationId}'`;
-
-    db.one(query)
-        .then((job) => {
-            res.send(job);
-        })
-        .catch((err) => {
-            console.log(err);
-        });
-});
-
 app.get('/login', (req, res) => {
     res.render('pages/login', {user: req.session.user, error: req.session.error});
     if (typeof req.session.error !== 'undefined') {
@@ -296,11 +282,29 @@ app.get('/api/users/:userId/job-applications', (req, res) => {
             });
     })
         .then((appArr) => {
-            res.render('pages/applications', {apps: appArr});
+            res.render('pages/applications', {apps: appArr, user: req.session.user});
         })
         .catch((err) => {
             console.log(err);
         });
+});
+
+app.get('/api/users/:userId/job-applications/:applicationId', (req, res) => {
+    const query = `SELECT *
+                   FROM applications
+                   WHERE appID = '${req.params.applicationId}'`;
+
+    db.one(query)
+        .then((app) => {
+            res.render('pages/update-application', {app: app, user: req.session.user});
+        })
+        .catch((err) => {
+            console.log(err);
+        });
+});
+
+app.post('/json', (req, res) => {
+    res.send(req.body);
 });
 
 const port = process.env.PORT || 3000;
