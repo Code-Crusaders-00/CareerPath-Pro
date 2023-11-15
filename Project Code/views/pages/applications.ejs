@@ -24,6 +24,13 @@
                     <td><%= apps[i].company %></td>
                     <td><%= apps[i].industry %></td>
                     <td><%= apps[i].description %></td>
+                    <td>
+                        <a href="/users/<%= user.userid %>/job-applications/<%= apps[i].appid %>">
+                          <button type="submit" class="btn btn-outline-primary">
+                            EDIT
+                          </button>
+                        </a>
+                    </td>
                 </tr>
                 <% } %>
             </tbody>

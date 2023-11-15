@@ -254,20 +254,6 @@ app.post('/api/users/:userId/job-applications', (req, res) => {
         });
 });
 
-app.get('/api/users/:userId/job-applications/:applicationId', (req, res) => {
-    const query = `SELECT *
-                   FROM applications
-                   WHERE jobID = '${req.params.applicationId}'`;
-
-    db.one(query)
-        .then((job) => {
-            res.send(job);
-        })
-        .catch((err) => {
-            console.log(err);
-        });
-});
-
 app.get('/login', (req, res) => {
     res.render('pages/login', {user: req.session.user, error: req.session.error});
     if (typeof req.session.error !== 'undefined') {
@@ -327,6 +313,48 @@ app.post('/login', async (req, res) => {
     }
 });
 
+app.get('/api/users/:userId/job-applications', (req, res) => {
+    const queryOne = `SELECT appID
+                      FROM user_to_applications
+                      WHERE userID = '${req.params.userId}'`;
+
+    db.task(t => {
+        return t.any(queryOne)
+            .then(appIds => {
+                const appIdsArr = appIds.map((app) => {
+                    return app.appid;
+                });
+                if (appIdsArr.length == 0) {
+                    return [];
+                }
+                const queryTwo = `SELECT *
+                                  FROM applications
+                                  WHERE appID = ANY (array [${appIdsArr}])`;
+                return t.any(queryTwo);
+            });
+    })
+        .then((appArr) => {
+            res.send(appArr);
+        })
+        .catch((err) => {
+            console.log(err);
+        });
+});
+
+app.get('/api/users/:userId/job-applications/:applicationId', (req, res) => {
+    const query = `SELECT *
+                   FROM applications
+                   WHERE appID = '${req.params.applicationId}'`;
+
+    db.one(query)
+        .then((app) => {
+            res.send(app);
+        })
+        .catch((err) => {
+            console.log(err);
+        });
+});
+
 // Authentication Middleware.
 const auth = (req, res, next) => {
     if (!req.session.user) {
@@ -379,30 +407,51 @@ app.get('/jobs', async (req, res) => {
   }
 });
 
-app.get('/api/users/:userId/job-applications', (req, res) => {
-    const queryOne = `SELECT appID
-                      FROM user_to_applications
-                      WHERE userID = '${req.params.userId}'`;
+app.get('/users/:userId/job-applications', async (req, res) => {
+    try {
+        // Make request to API
+        const jobApps = await fetch(`http://localhost:3000/api/users/${req.session.user.userid}/job-applications`).then((res) =>
+            res.json()
+        );
+        //res.render("pages/jobBoard", { jobs});
+        res.render("pages/applications", {apps: jobApps, user: req.session.user, error: req.session.error});
+      } catch (error) {
+        console.error(error);
+        res.render("pages/home", {
+          jobs: [],
+          error: true,
+          message: error.message,
+        });
+      }
+});
 
-    db.task(t => {
-        return t.any(queryOne)
-            .then(appIds => {
-                const appIdsArr = appIds.map((app) => {
-                    return app.appid;
-                });
-                if (appIdsArr.length == 0) {
-                    return [];
-                }
-                const queryTwo = `SELECT *
-                                  FROM applications
-                                  WHERE appID = ANY (array [${appIdsArr}])`;
-                return t.any(queryTwo);
-            });
-    })
-        .then((appArr) => {
-            res.render('pages/applications', {apps: appArr});
+app.get('/users/:userId/job-applications/:applicationId', async (req, res) => {
+    const query = `SELECT *
+                   FROM applications
+                   WHERE appID = '${req.params.applicationId}'`;
+
+    db.one(query)
+        .then((app) => {
+            res.render('pages/update-application', {user: req.session.user, app: app});
         })
         .catch((err) => {
+            console.log(err);
+        });
+});
+
+app.post('/users/:userId/job-applications/:applicationId', (req, res) => {
+    const query = `UPDATE applications SET
+                        name = '${req.body.name}',
+                        company = '${req.body.company}',
+                        industry = '${req.body.industry}',
+                        description = '${req.body.description}'
+                        WHERE appID = ${req.params.applicationId}`;
+
+    db.none(query)
+        .then( () => {
+            res.redirect(`/users/${req.session.user.userid}/job-applications`);
+        })
+        .catch( (err) => {
             console.log(err);
         });
 });
