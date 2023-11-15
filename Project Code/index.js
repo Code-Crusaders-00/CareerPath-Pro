@@ -352,10 +352,6 @@ app.post('/users/:userId/job-applications/:applicationId', (req, res) => {
         });
 });
 
-app.post('/json', (req, res) => {
-    res.send(req.body);
-});
-
 const port = process.env.PORT || 3000;
 if (process.env.NODE_ENV !== 'test') {
    app.listen(port, () => {
