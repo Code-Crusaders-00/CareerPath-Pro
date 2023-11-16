@@ -30,6 +30,11 @@
                             EDIT
                           </button>
                         </a>
+                        <form action="/users/<%= user.userid %>/job-applications/<%= apps[i].appid %>/delete" method="POST">
+                          <button type="submit" class="btn btn-outline-primary">
+                            Delete
+                          </button>
+                        </form>
                     </td>
                 </tr>
                 <% } %>
