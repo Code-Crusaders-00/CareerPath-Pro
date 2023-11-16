@@ -11,6 +11,7 @@
         "express-session": "1.17.3",
         "marked": "^9.1.5",
         "pg-promise": "^10.11.1",
+        "request": "^2.88.2",
         "swagger-jsdoc": "^6.2.8",
         "swagger-ui-express": "^5.0.0"
     },
