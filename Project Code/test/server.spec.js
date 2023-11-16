@@ -8,6 +8,12 @@ chai.use(chaiHttp);
 
 const {assert, expect} = chai;
 
+function getRandomInt(min, max) {
+  min = Math.ceil(min);
+  max = Math.floor(max);
+  return Math.floor(Math.random() * (max - min) + min); // The maximum is exclusive and the minimum is inclusive
+}
+
 describe('GET /login', () => {
   it('should render the login page', (done) => {
     chai.request(server)
@@ -34,4 +40,64 @@ describe('GET /login', () => {
         done();
       });
   });
+    it('positive : should login the user', (done) => {
+        chai.request(server)
+            .post('/login')
+            .send({
+                email: 'user1@gmail.com',
+                password: 'pass1'
+            })
+            .end((err, res) => {
+                expect(res).to.have.status(200);
+                expect(res.text).to.contain('Redirecting to /home');
+                done();
+            });
+    });
+    it('negative : should not login the user', (done) => {
+        chai.request(server)
+            .post('/login')
+            .send({
+                email: 'incorrect@gmail.com',
+                password: 'incorrect'
+            })
+            .end((err, res) => {
+                expect(res).to.have.status(200);
+                expect(res.text).to.not.contain('Redirecting to /home');
+                done();
+            });
+    });
+});
+
+
+describe('GET /register', () => {
+    it('negative : should not register the user', (done) => {
+        chai.request(server)
+            .post('/register')
+            .send({
+                firstNAME: 'Random',
+                lastNAME: 'User',
+                email: 'user1@gmail.com',
+                password: 'pass1'
+            })
+            .end((err, res) => {
+                expect(res).to.have.status(200);
+                expect(res.text).to.not.contain('Redirecting to /home');
+                done();
+            });
+    });
+    it('positive : should register the user', (done) => {
+        chai.request(server)
+            .post('/register')
+            .send({
+                firstNAME: 'Random',
+                lastNAME: 'User',
+                email: 'user'+getRandomInt(10,100)+'@gmail.com',
+                password: 'pass1'
+            })
+        .end((err, res) => {
+            expect(res).to.have.status(200);
+            expect(res.text).to.contain('<button type="submit" class="btn btn-primary">Login</button>');
+            done();
+        }); 
+    });
 });
