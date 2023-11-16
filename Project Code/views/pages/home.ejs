@@ -3,21 +3,12 @@
 
 
 <main>
-    <div class="container">
+    <div class="container-xxl">
       <form action="/home" method="POST">
-        <div>
-            <h1 style="margin-left:auto; margin-right:auto; margin-top:50px">
-                <centre>Welcome <%= user.firstName %>
-                </centre>
-            </h1>
-        </div>
         <div>
             <a href="/users/<%=user.userid%>/job-applications">Submitted Applications</a>
         </div>
 
-        <div>
-            <a href="/jobs">Find Jobs</a>
-        </div>
 
 <% function formatDate(dateString) {
     const options = { year: 'numeric', month: 'long', day: 'numeric' };
@@ -25,54 +16,57 @@
 } %>
 
 <section class="pt-5 pb-5">
-    <div class="container">
-        <div class="row">
-            <div class="col-6">
-                <h3 class="mb-3">Jobs for You</h3>
-            </div>
-            <div class="col-6 text-right">
-                <a class="btn btn-primary mb-3 mr-1" href="#carouselExampleIndicators2" role="button" data-bs-slide="prev">
-                    <i class="fa fa-arrow-left"></i>
-                </a>
-                <a class="btn btn-primary mb-3" href="#carouselExampleIndicators2" role="button" data-bs-slide="next">
-                    <i class="fa fa-arrow-right"></i>
-                </a>
-            </div>
-            <div class="col-12">
-                <div id="carouselExampleIndicators2" class="carousel slide" data-bs-ride="carousel">
-                    <div class="carousel-inner">
-
-                        <% let totalJobs = jobs.length; %>
-                        <% for(let i = 0; i < totalJobs; i += 3) { %>
-                            <div class="carousel-item <%= i === 0 ? 'active' : '' %>">
-                                <div class="row">
-
-                                    <% for(let j = i; j < i + 3 && j < totalJobs; j++) { %>
-                                        <div class="col-md-4 mb-3">
-                                            <div class="card h-100">
-                                                <!-- Replace with actual image if available -->
-                                                <!--<img class="img-fluid" alt="Job Image" src="path/to/job/image/or/placeholder.jpg">-->
-                                                
-                                                <div class="card-body">
-                                                    <h4 class="card-title"><%= jobs[j].role %></h4>
-                                                    <p class="card-text">Company: <%= jobs[j].company %></p>
-                                                    <p class="card-text">Location: <%= jobs[j].location %></p>
-                                                    <p class="card-text">Date Posted: <%= formatDate(jobs[j].date_posted) %></p>
-                                                    <a href="<%= jobs[j].application_link %>" class="btn btn-primary">Apply</a>
+  
+            
+                <div class="row">
+                    <div class="col-1">
+                    </div>
+                <div class="col-auto">
+                    <h3 class="mb-3">Jobs for You</h3>
+                </div>
+                </div>
+                <div class="row justify-content-center">
+                    <div class="col-auto" style="margin-top:100px">
+                        <a class="btn btn-primary"href="#carouselExampleIndicators2" role="button" data-bs-slide="prev">
+                            <i class="fa fa-arrow-left"></i>
+                        </a>
+                    </div>
+                    <div class="col-10">
+                    <div id="carouselExampleIndicators2" class="carousel slide" data-bs-ride="carousel">
+                        <div class="carousel-inner">
+                            <% let totalJobs = jobs.length; %>
+                            <% for(let i = 0; i < totalJobs; i += 3) { %>
+                                <div class="carousel-item <%= i === 0 ? 'active' : '' %>">
+                                    <div class="row">
+                                        <% for(let j = i; j < i + 3 && j < totalJobs; j++) { %>
+                                            <div class="col-md-4 mb-3">
+                                                <div class="card h-100">
+                                                    <!-- Replace with actual image if available -->
+                                                    <!--<img class="img-fluid" alt="Job Image" src="path/to/job/image/or/placeholder.jpg">-->
+                                                    <div class="card-body">
+                                                        <h4 class="card-title"><%= jobs[j].role %></h4>
+                                                        <p class="card-text">Company: <%= jobs[j].company %></p>
+                                                        <p class="card-text">Location: <%= jobs[j].location %></p>
+                                                        <p class="card-text">Date Posted: <%= formatDate(jobs[j].date_posted) %></p>
+                                                        <a href="<%= jobs[j].application_link %>" class="btn btn-primary">Apply</a>
+                                                    </div>
                                                 </div>
                                             </div>
-                                        </div>
-                                    <% } %>
-
+                                        <% } %>
+                                    </div>
                                 </div>
-                            </div>
-                        <% } %>
-
+                            <% } %>
+                        </div>
+                        </div>
+                     </div>
+                     <div class="col-auto" style="margin-top:100px;">
+                        <a class="btn btn-primary mb-3" href="#carouselExampleIndicators2" role="button" data-bs-slide="next">
+                            <i class="fa fa-arrow-right"></i>
+                        </a>
                     </div>
                 </div>
-            </div>
-        </div>
-    </div>
+         
+    
 </section>
 
 <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.0.3/css/font-awesome.css" rel="stylesheet">
