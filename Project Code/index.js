@@ -260,7 +260,7 @@ app.post('/login', async (req, res) => {
                     };
                     req.session.user = user;
                     req.session.save();
-                    res.redirect('/home');
+                    res.redirect(200, '/home');
                 } else {
                     console.log("Invalid Password");
                     req.session.error = {
@@ -354,7 +354,7 @@ const auth = (req, res, next) => {
             err_level: "danger",
             err_msg: "You must be logged in to view this page."
         }
-        return res.redirect('/login');
+        return res.redirect(401,'/login');
     }
     next();
 };
