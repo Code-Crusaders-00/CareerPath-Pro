@@ -372,7 +372,7 @@ app.use(auth);
 
 app.get('/home', async (req, res) => {
     // Get Random Jobs
-    try { 
+    try {
         const jobs = await fetch("http://localhost:3000/api/jobs?limit=15&random=true").then((res) =>
         res.json()
     );
@@ -448,6 +448,29 @@ app.post('/users/:userId/job-applications/:applicationId', (req, res) => {
                         WHERE appID = ${req.params.applicationId}`;
 
     db.none(query)
+        .then( () => {
+            res.redirect(`/users/${req.session.user.userid}/job-applications`);
+        })
+        .catch( (err) => {
+            console.log(err);
+        });
+});
+
+app.get('/users/:userId/job-applications/appid/add', (req, res) => {
+    res.render('pages/add-application', {user: req.session.user});
+});
+
+app.post('/users/:userId/job-applications/appid/add', (req, res) => {
+    const queryOne = `INSERT INTO applications (name, company, industry, description)
+                    VALUES ('${req.body.name}', '${req.body.company}', '${req.body.industry}', '${req.body.description}')
+                    RETURNING appID`;
+
+    db.one(queryOne)
+        .then( (appid) => {
+            const queryTwo = `INSERT INTO user_to_applications (userID, appID)
+                                VALUES (${req.session.user.userid}, ${appid.appid})`;
+            return db.none(queryTwo);
+        })
         .then( () => {
             res.redirect(`/users/${req.session.user.userid}/job-applications`);
         })
