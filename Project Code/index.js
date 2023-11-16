@@ -479,6 +479,23 @@ app.post('/users/:userId/job-applications/appid/add', (req, res) => {
         });
 });
 
+app.post('/users/:userId/job-applications/:applicationId/delete', (req, res) => {
+    const queryOne = `DELETE FROM applications WHERE appID = ${req.params.applicationId}`;
+    const queryTwo = `DELETE FROM user_to_applications WHERE
+                        appID = ${req.params.applicationId} AND userID = ${req.session.user.userid}`;
+
+    db.none(queryOne)
+        .then( () => {
+            return db.none(queryTwo);
+        })
+        .then( () => {
+            res.redirect(`/users/${req.session.user.userid}/job-applications`);
+        })
+        .catch( (err) => {
+            console.log(err);
+        });
+});
+
 const port = process.env.PORT || 3000;
 if (process.env.NODE_ENV !== 'test') {
    app.listen(port, () => {
