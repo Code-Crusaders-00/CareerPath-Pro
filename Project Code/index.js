@@ -228,32 +228,6 @@ app.get('/api/jobs', async (req, res) => {
     }
 });
 
-app.post('/api/users/:userId/job-applications', (req, res) => {
-    const queryOne = `INSERT INTO applications
-                          (name, company, industry, description)
-                      VALUES ('${req.body.name}', '${req.body.company}', '${req.body.industry}',
-                              '${req.body.description}')
-                      RETURNING jobID`;
-
-    db.one(queryOne)
-        .then((jobId) => {
-            const queryTwo = `INSERT INTO jobs_to_user (jobID, username)
-                              VALUES (${jobId}, '${req.params.userId}')`;
-
-            db.none(queryTwo)
-                .then(() => {
-                    res.status(200);
-                    res.redirect(`/users/${req.params.userId}/job-applications`);
-                })
-                .catch((err) => {
-                    console.log(err);
-                });
-        })
-        .catch((err) => {
-            console.log(err);
-        });
-});
-
 app.get('/login', (req, res) => {
     res.render('pages/login', {user: req.session.user, error: req.session.error});
     if (typeof req.session.error !== 'undefined') {
@@ -314,44 +288,62 @@ app.post('/login', async (req, res) => {
 });
 
 app.get('/api/users/:userId/job-applications', (req, res) => {
-    const queryOne = `SELECT appID
-                      FROM user_to_applications
-                      WHERE userID = '${req.params.userId}'`;
+    const queryOne = `SELECT EXISTS(SELECT * FROM users WHERE userID = ${req.params.userId})`;
+    const queryTwo = `SELECT appID FROM user_to_applications WHERE userID = ${req.params.userId}`;
 
-    db.task(t => {
-        return t.any(queryOne)
-            .then(appIds => {
-                const appIdsArr = appIds.map((app) => {
-                    return app.appid;
-                });
-                if (appIdsArr.length == 0) {
-                    return [];
-                }
-                const queryTwo = `SELECT *
-                                  FROM applications
-                                  WHERE appID = ANY (array [${appIdsArr}])`;
-                return t.any(queryTwo);
-            });
-    })
-        .then((appArr) => {
-            res.send(appArr);
+    db.one(queryOne)
+        .then( (user) => {
+            if (!user.exists)
+                throw new Error('User not found');
+
+            return db.any(queryTwo);
         })
-        .catch((err) => {
-            console.log(err);
+        .then( (appIdsObj) => {
+            const appIdsArr = appIdsObj.map( (app) => {
+                return app.appid;
+            });
+
+            if (appIdsArr.length === 0)
+                return [];
+
+            const queryThree = `SELECT * FROM applications WHERE appID = ANY(array [${appIdsArr}])`;
+            return db.any(queryThree);
+        })
+        .then( (apps) => {
+            res.status(200).json(apps);
+        })
+        .catch( (err) => {
+            res.status(500).json({error: err.message});
         });
 });
 
-app.get('/api/users/:userId/job-applications/:applicationId', (req, res) => {
-    const query = `SELECT *
-                   FROM applications
-                   WHERE appID = '${req.params.applicationId}'`;
+app.post('/api/users/:userId/job-applications', (req, res) => {
+    const queryOne = `SELECT EXISTS(SELECT * FROM users WHERE userID = ${req.params.userId})`;
 
-    db.one(query)
-        .then((app) => {
-            res.send(app);
+    db.one(queryOne)
+        .then( (user) => {
+            if (!user.exists)
+                throw new Error('User not found');
+            else if (!req.body.name || !req.body.company || !req.body.industry || !req.body.description)
+                throw new Error('Incorrect request body format');
+
+            const queryTwo = `INSERT INTO applications (name, company, industry, description)
+                                VALUES ('${req.body.name}', '${req.body.company}', '${req.body.industry}', '${req.body.description}')
+                                RETURNING appID`;
+
+            return db.one(queryTwo);
         })
-        .catch((err) => {
-            console.log(err);
+        .then( (appID) => {
+            const queryThree = `INSERT INTO user_to_applications (userID, appID)
+                                    VALUES (${req.params.userId}, ${appID.appid})
+                                    RETURNING appID`;
+            return db.one(queryThree);
+        })
+        .then( (appID) => {
+            res.status(201).json(appID);
+        })
+        .catch( (err) => {
+            res.status(500).json({error: err.message});
         });
 });
 
