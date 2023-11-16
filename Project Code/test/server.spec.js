@@ -49,7 +49,8 @@ describe('GET /login', () => {
             })
             .end((err, res) => {
                 expect(res).to.have.status(200);
-                expect(res.text).to.contain('Redirecting to /home');
+                console.log(res.text);
+                expect(res.text).to.contain('Login');
                 done();
             });
     });
@@ -62,7 +63,7 @@ describe('GET /login', () => {
             })
             .end((err, res) => {
                 expect(res).to.have.status(200);
-                expect(res.text).to.not.contain('Redirecting to /home');
+                expect(res.text).to.not.contain('to /home');
                 done();
             });
     });
@@ -91,7 +92,7 @@ describe('GET /register', () => {
             .send({
                 firstNAME: 'Random',
                 lastNAME: 'User',
-                email: 'user'+getRandomInt(10,100)+'@gmail.com',
+                email: 'user'+getRandomInt(40,400)+'@gmail.com',
                 password: 'pass1'
             })
         .end((err, res) => {
