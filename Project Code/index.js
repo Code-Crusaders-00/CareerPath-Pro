@@ -456,19 +456,19 @@ app.post('/users/:userId/job-applications/:applicationId', (req, res) => {
         });
 });
 
-app.get('/users/:userId/job-applications/add', (req, res) => {
-    res.render('/pages/add-application', {user: req.session.user});
+app.get('/users/:userId/job-applications/appid/add', (req, res) => {
+    res.render('pages/add-application', {user: req.session.user});
 });
 
-app.post('/users/:userId/job-applications/add', (req, res) => {
+app.post('/users/:userId/job-applications/appid/add', (req, res) => {
     const queryOne = `INSERT INTO applications (name, company, industry, description)
-                    VALUES (${req.body.name}, ${req.body.company}, ${req.body.industry}, ${req.body.description})
+                    VALUES ('${req.body.name}', '${req.body.company}', '${req.body.industry}', '${req.body.description}')
                     RETURNING appID`;
 
     db.one(queryOne)
         .then( (appid) => {
             const queryTwo = `INSERT INTO user_to_applications (userID, appID)
-                                VALUES (${req.session.user.userid}, ${appid})`;
+                                VALUES (${req.session.user.userid}, ${appid.appid})`;
             return db.none(queryTwo);
         })
         .then( () => {
