@@ -2,6 +2,20 @@
 <%- include ('../partials/nav') %>
 
 <main>
+    <% function parseDate(dateString) {
+        // Parse date string in the format "2023-11-06T00:00:00.000Z"
+        var parts = dateString.split(/[-T:Z.]/);
+        var dateObject = new Date(Date.UTC(parts[0], parts[1] - 1, parts[2], parts[3], parts[4], parts[5], parts[6]));
+
+        // Extract and format the date part as MM/DD/YYYY
+        var formattedDate = (dateObject.getMonth() + 1).toString().padStart(2, '0') +
+                            '/' +
+                            dateObject.getDate().toString().padStart(2, '0') +
+                            '/' +
+                            dateObject.getFullYear();
+
+        return formattedDate;
+    }%>
     <div class="container">
       
       <!-- THE REST OF YOUR HTML CODE GOES HERE -->
@@ -19,7 +33,7 @@
             <h5 class="card-title"><%=jobs.role%></h5>
             <p class="card-text">Company: <%=jobs.company %></p>
             <p class="card-text">Location: <%=jobs.location %></p>
-            <p class="card-text">Date Posted: <%=jobs.date_posted %></p>
+            <p class="card-text">Date Posted: <%=parseDate(jobs.date_posted) %></p>
             
             <a href="<%=jobs.application_link%>" class="btn btn-primary">Apply</a>
           </div>
