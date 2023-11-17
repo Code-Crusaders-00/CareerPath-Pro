@@ -4,7 +4,8 @@
 
 <main>
     <h2>Update application with appID <%= app.appid %></h2>
-    <form method="POST" action="/users/<%= user.userid %>/job-applications/<%= app.appid %>">
+    <form method="POST" action="/job-applications/edit">
+        <input type="hidden" name="applicationid" value="<%= app.appid %>">
         <div class="mb-3">
           <label for="name" class="form-label">Name</label>
           <input type="text" class="form-control" id="name" value="<%= app.name %>" name="name">
