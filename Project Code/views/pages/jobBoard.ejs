@@ -1,5 +1,6 @@
 <%- include ('../partials/head') %>
 <%- include ('../partials/nav') %>
+
 <%function parseDate(dateString) {
     // Parse date string in the format "2023-11-06T00:00:00.000Z"
     var parts = dateString.split(/[-T:Z.]/);
@@ -15,68 +16,9 @@
     return formattedDate;
 }
 %>
-<% jobs.getElementById('sortByDateAsc').addEventListener('click', function () {
-    sortByDate('asc');
-});
 
-jobs.getElementById('sortByDateDesc').addEventListener('click', function () {
-    sortByDate('desc');
-});
-
-function sortByDate(order) {
-    jobs.sort(function (a, b) {
-        var dateA = parseDate(a.date_posted);
-        var dateB = parseDate(b.date_posted);
-
-        if (order === 'asc') {
-            return dateA - dateB;
-        } else {
-            return dateB - dateA;
-        }
-    });
-
-    renderJobCards();
-}
-
-function renderJobCards() {
-    var jobCardsContainer = document.querySelector('.job-cards-container');
-    jobCardsContainer.innerHTML = '';
-
-    jobs.forEach(job => {
-        var card = document.createElement('div');
-        card.className = 'card';
-        card.style = 'width: 30rem;';
-
-        var formattedDate = parseDate(job.date_posted);
-
-        card.innerHTML = `
-            <div class="card-body">
-                <h5 class="card-title">${job.role}</h5>
-                <p class="card-text">Company: ${job.company}</p>
-                <p class="card-text">Location: ${job.location}</p>
-                <p class="card-text">Date Posted: ${formattedDate}</p>
-                <a href="${job.application_link}" class="btn btn-primary">Apply</a>
-            </div>
-        `;
-
-        jobCardsContainer.appendChild(card);
-    });
-}%>
 <main>
-    <% function parseDate(dateString) {
-        // Parse date string in the format "2023-11-06T00:00:00.000Z"
-        var parts = dateString.split(/[-T:Z.]/);
-        var dateObject = new Date(Date.UTC(parts[0], parts[1] - 1, parts[2], parts[3], parts[4], parts[5], parts[6]));
-
-        // Extract and format the date part as MM/DD/YYYY
-        var formattedDate = (dateObject.getMonth() + 1).toString().padStart(2, '0') +
-                            '/' +
-                            dateObject.getDate().toString().padStart(2, '0') +
-                            '/' +
-                            dateObject.getFullYear();
-
-        return formattedDate;
-    }%>
+    
     <div class="container">
 
         <!-- Filter button -->
@@ -120,35 +62,5 @@ function renderJobCards() {
 
 <%- include ('../partials/footer') %>
 
-<script>
-    // JavaScript to handle sorting
-    document.getElementById('sortByDate').addEventListener('click', function () {
-        // Assuming jobs array has a property named 'due_date'
-        jobs.sort(function (a, b) {
-            return new Date(a.due_date) - new Date(b.due_date);
-        });
 
-        // Clear existing cards
-        document.querySelector('.container').innerHTML = '';
-
-        // Render sorted cards
-        jobs.forEach(jobs => {
-            var card = document.createElement('div');
-            card.className = 'card';
-            card.style = 'width: 30rem;';
-
-            card.innerHTML = `
-                <div class="card-body">
-                    <h5 class="card-title">${jobs.role}</h5>
-                    <p class="card-text">Company: ${jobs.company}</p>
-                    <p class="card-text">Location: ${jobs.location}</p>
-                    <p class="card-text">Date Posted: ${jobs.date_posted}</p>
-                    <a href="${jobs.application_link}" class="btn btn-primary">Apply</a>
-                </div>
-            `;
-
-            document.querySelector('.container').appendChild(card);
-        });
-    });
-</script>
 
