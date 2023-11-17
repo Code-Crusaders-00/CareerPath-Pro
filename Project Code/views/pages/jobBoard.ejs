@@ -32,13 +32,16 @@
             </ul>
         </div>
 
+        <button id="sortByDate" class="btn btn-secondary">Sort by Due Date</button>
+
+        <!-- THE REST OF YOUR HTML CODE GOES HERE -->
         <% if (locals.message) { %>
         <div class="alert alert-<%- locals.error ? 'danger' : 'success' %>" role="alert">
-          <%= message %>
+            <%= message %>
         </div>
-      <% } %>
+        <% } %>
 
-      <% jobs.forEach(jobs => {   %>
+        <% jobs.forEach(jobs => { %>
         <div class="card" style="width: 30rem;">
           
           <!-- <img src="..." class="card-img-top" alt="..."> -->
@@ -61,6 +64,3 @@
 </main>
 
 <%- include ('../partials/footer') %>
-
-
-

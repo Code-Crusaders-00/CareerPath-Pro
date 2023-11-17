@@ -1,24 +1,31 @@
 DROP TABLE IF EXISTS users CASCADE;
 CREATE TABLE users(
-  password CHAR(60) NOT NULL,
-  firstName VARCHAR,
-  lastNAME VARCHAR,
-  email VARCHAR PRIMARY KEY
+    userID SERIAL PRIMARY KEY,
+    password CHAR(60) NOT NULL,
+    firstName VARCHAR,
+    lastNAME VARCHAR,
+    email VARCHAR UNIQUE
 );
 
 DROP TABLE IF EXISTS applications CASCADE;
 CREATE TABLE applications(
-    jobID SERIAL PRIMARY KEY,
+    appID SERIAL PRIMARY KEY,
     name VARCHAR,
     company VARCHAR,
     industry VARCHAR,
     description VARCHAR
 );
 
+DROP TABLE IF EXISTS user_to_applications CASCADE;
+CREATE TABLE user_to_applications(
+    userID INTEGER,
+    appID INTEGER
+);
+
 DROP TABLE IF EXISTS jobs_to_user CASCADE;
 CREATE TABLE jobs_to_user(
     jobID INTEGER ,
-    username VARCHAR(50)
+    userID INTEGER
 );
 
 DROP TABLE IF EXISTS jobs CASCADE;
@@ -31,5 +38,6 @@ CREATE TABLE jobs(
     application_link VARCHAR,
     offers_sponsorship BOOLEAN DEFAULT TRUE,
     requires_us_citizenship BOOLEAN DEFAULT TRUE,
-    internship BOOLEAN DEFAULT FALSE
+    internship BOOLEAN DEFAULT FALSE,
+    UNIQUE (application_link)
 );

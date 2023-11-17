@@ -1,0 +1,29 @@
+name: Node.js CI
+
+on:
+  push:
+    paths:
+      - "Project Code/**"
+  pull_request:
+    paths:
+      - "Project Code/**"
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node_version: [18.x]
+    steps:
+      - uses: actions/checkout@v3
+      - name: Use Node.js ${{ matrix.node_version }}
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ matrix.node_version }}
+          cache: 'npm'
+          cache-dependency-path: '**/package-lock.json'
+      - run: "cd 'Project Code' && npm install"
+      - run: "cd 'Project Code' && npm test"
+        env:
+          CI: true
+
