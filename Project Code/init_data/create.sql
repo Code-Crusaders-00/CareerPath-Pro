@@ -41,3 +41,30 @@ CREATE TABLE jobs(
     internship BOOLEAN DEFAULT FALSE,
     UNIQUE (application_link)
 );
+
+
+DROP TABLE IF EXISTS personal_info CASCADE;
+CREATE TABLE personal_info(
+    user_id SERIAL PRIMARY KEY,
+    first_name VARCHAR,
+    last_name VARCHAR,
+    phone_number VARCHAR,
+    email VARCHAR UNIQUE,
+    street_address VARCHAR,
+    city VARCHAR,
+    state VARCHAR,
+    zip_code VARCHAR,
+    college VARCHAR,
+    degree VARCHAR,
+    high_school VARCHAR,
+    company_name VARCHAR[],
+    position VARCHAR[],
+    employment_time VARCHAR[],
+    achievements VARCHAR[],
+    skills VARCHAR,
+    referal_name VARCHAR[],
+    referal_email VARCHAR[],
+    referal_number VARCHAR[],
+    resume BYTEA,
+    user_id_1 INT REFERENCES users(userID)
+);
