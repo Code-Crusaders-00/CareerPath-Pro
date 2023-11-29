@@ -1,0 +1,13 @@
+Weekly Sync Notes:
+
+Past weeks deliverables:
+
+- Worked on completing the saved jobs application page for the user
+- Created a form page where the user can input user information that is saved within the database. The application information will now not need to be inputed everytime a user applies for a job.
+- Learn more feature was created for the jobs page
+- Changed the layout of the dashboard
+
+Next Weeks Deliverables:
+- Finishing the project
+- Working on the presenation for final delivery
+- Add some small additional changes to the layout of the pages
