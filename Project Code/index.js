@@ -110,13 +110,6 @@ app.get('/information_1', (req, res) => {
     res.render('pages/information_1', {user: req.session.user, error: req.session.error});
 });
 
-app.post('/information_1', (req, res) => {
-    const query = "SELECT * FROM personal_info"
-    db.none(query)
-    .then ((data) => {
-        console.log(data);
-    })
-});
 /**
  * @swagger
  * /api/jobs:
