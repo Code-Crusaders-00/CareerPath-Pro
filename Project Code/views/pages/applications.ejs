@@ -25,15 +25,16 @@
                     <td><%= apps[i].industry %></td>
                     <td><%= apps[i].description %></td>
                     <td>
-                        <a href="/users/<%= user.userid %>/job-applications/<%= apps[i].appid %>">
-                          <button type="submit" class="btn btn-outline-primary">
-                            EDIT
-                          </button>
-                        </a>
-                        <form action="/users/<%= user.userid %>/job-applications/<%= apps[i].appid %>/delete" method="POST">
-                          <button type="submit" class="btn btn-outline-primary">
-                            Delete
-                          </button>
+                        <form action="/job-applications/edit/<%= apps[i].appid %>" method="GET">
+                            <button type="submit" class="btn btn-outline-primary">
+                                Edit
+                            </button>
+                        </form>
+                        <form action="/job-applications/delete" method="POST">
+                            <input type="hidden" name="applicationid" value="<%= apps[i].appid %>">
+                            <button type="submit" class="btn btn-outline-primary">
+                                Delete
+                            </button>
                         </form>
                     </td>
                 </tr>
@@ -41,7 +42,7 @@
             </tbody>
           </table>
     <% } %>
-    <a href="/users/<%= user.userid %>/job-applications/appid/add">
+    <a href="/job-applications/add">
       <button type="submit" class="btn btn-outline-primary">
         Add Application
       </button>

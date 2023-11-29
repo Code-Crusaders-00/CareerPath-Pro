@@ -1,0 +1,28 @@
+Week 2 Sync:
+
+During our sync this week, we focused on implementing and discussing several improvements for our project:
+
+1. Data Loss Prevention Best Practices:
+    -   We had a detailed discussion on best practices to prevent unintentional data loss, emphasizing the importance of regular saving and implementing safeguards against accidental loss of progress.
+2. Navbar Enhancement:
+    -   Improved the design and functionality of our website's navbar, incorporating our software name for a more polished and professional appearance.
+3. Job Board Previews:
+    -   Worked on creating job previews for the job board and applications, enhancing the user experience by providing quick insights into available opportunities.
+4. Test Cases Implementation:
+    -   Added comprehensive test cases to our program to identify and isolate potential code issues, ensuring robustness and reliability in our application.
+5. API Integration:
+    -   Successfully transitioned our API route to fetch data from an actual website, enhancing the authenticity and reliability of the information presented on our platform.
+6. Job Board Functionality:
+    -   Implemented backend JavaScript functionalities to seamlessly render new API data on the job board page, ensuring that users have access to the most up-to-date and relevant job listings.
+
+
+Next Week's Deliverables:
+
+1. Website Polish:
+    -   Further refining the website's design and user interface to create a more engaging and visually appealing experience.
+2. Application Endpoints:
+    -   Adding and fine-tuning the current application endpoints to enhance the application process and improve user interaction.
+3. Sort Filter Implementation:
+    -   Introducing a sort filter feature to organize job listings in chronological order, providing users with a more intuitive way to navigate and find relevant opportunities.
+4. Null Username Issue Fix:
+    -   Addressing and resolving the null username issue that occurs during the registration process, ensuring a smooth and error-free user registration experience.

@@ -435,7 +435,7 @@ app.get('/jobs', async (req, res) => {
   }
 });
 
-app.get('/users/:userId/job-applications', async (req, res) => {
+app.get('/job-applications', async (req, res) => {
     try {
         // Make request to API
         const jobApps = await fetch(`http://localhost:3000/api/users/${req.session.user.userid}/job-applications`).then((res) =>
@@ -453,12 +453,10 @@ app.get('/users/:userId/job-applications', async (req, res) => {
       }
 });
 
-app.get('/users/:userId/job-applications/:applicationId', async (req, res) => {
-    const query = `SELECT *
-                   FROM applications
-                   WHERE appID = '${req.params.applicationId}'`;
+app.get('/job-applications/edit/:applicationid', (req, res) => {
+    const query = "SELECT * FROM applications WHERE appID = $1";
 
-    db.one(query)
+    db.one(query, [req.params.applicationid])
         .then((app) => {
             res.render('pages/update-application', {user: req.session.user, app: app});
         })
@@ -467,57 +465,48 @@ app.get('/users/:userId/job-applications/:applicationId', async (req, res) => {
         });
 });
 
-app.post('/users/:userId/job-applications/:applicationId', (req, res) => {
-    const query = `UPDATE applications SET
-                        name = '${req.body.name}',
-                        company = '${req.body.company}',
-                        industry = '${req.body.industry}',
-                        description = '${req.body.description}'
-                        WHERE appID = ${req.params.applicationId}`;
+app.post('/job-applications/edit', (req, res) => {
+    const query = 'UPDATE applications SET name = $1, company = $2, industry = $3, description = $4 WHERE appID = $5';
 
-    db.none(query)
+    db.none(query, [req.body.name, req.body.company, req.body.industry, req.body.description, req.body.applicationid])
         .then( () => {
-            res.redirect(`/users/${req.session.user.userid}/job-applications`);
+            res.redirect('/job-applications');
         })
         .catch( (err) => {
             console.log(err);
         });
 });
 
-app.get('/users/:userId/job-applications/appid/add', (req, res) => {
+app.get('/job-applications/add', (req, res) => {
     res.render('pages/add-application', {user: req.session.user});
 });
 
-app.post('/users/:userId/job-applications/appid/add', (req, res) => {
-    const queryOne = `INSERT INTO applications (name, company, industry, description)
-                    VALUES ('${req.body.name}', '${req.body.company}', '${req.body.industry}', '${req.body.description}')
-                    RETURNING appID`;
+app.post('/job-applications/add', (req, res) => {
+    const queryOne = "INSERT INTO applications (name, company, industry, description) VALUES ($1, $2, $3, $4) RETURNING appID";
 
-    db.one(queryOne)
+    db.one(queryOne, [req.body.name, req.body.company, req.body.industry, req.body.description])
         .then( (appid) => {
-            const queryTwo = `INSERT INTO user_to_applications (userID, appID)
-                                VALUES (${req.session.user.userid}, ${appid.appid})`;
-            return db.none(queryTwo);
+            const queryTwo = "INSERT INTO user_to_applications (userID, appID) VALUES ($1, $2)";
+            return db.none(queryTwo, [req.session.user.userid, appid.appid]);
         })
         .then( () => {
-            res.redirect(`/users/${req.session.user.userid}/job-applications`);
+            res.redirect('/job-applications');
         })
         .catch( (err) => {
             console.log(err);
         });
 });
 
-app.post('/users/:userId/job-applications/:applicationId/delete', (req, res) => {
-    const queryOne = `DELETE FROM applications WHERE appID = ${req.params.applicationId}`;
-    const queryTwo = `DELETE FROM user_to_applications WHERE
-                        appID = ${req.params.applicationId} AND userID = ${req.session.user.userid}`;
+app.post('/job-applications/delete', (req, res) => {
+    const queryOne = 'DELETE FROM applications WHERE appID = $1';
+    const queryTwo = 'DELETE FROM user_to_applications WHERE appID = $1 AND userID = $2';
 
-    db.none(queryOne)
+    db.none(queryOne, [req.body.applicationid])
         .then( () => {
-            return db.none(queryTwo);
+            return db.none(queryTwo, [req.body.applicationid, req.session.user.userid]);
         })
         .then( () => {
-            res.redirect(`/users/${req.session.user.userid}/job-applications`);
+            res.redirect('/job-applications');
         })
         .catch( (err) => {
             console.log(err);

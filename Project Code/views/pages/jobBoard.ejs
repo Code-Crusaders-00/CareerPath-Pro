@@ -1,10 +1,37 @@
 <%- include ('../partials/head') %>
 <%- include ('../partials/nav') %>
 
+<%function parseDate(dateString) {
+    // Parse date string in the format "2023-11-06T00:00:00.000Z"
+    var parts = dateString.split(/[-T:Z.]/);
+    var dateObject = new Date(Date.UTC(parts[0], parts[1] - 1, parts[2], parts[3], parts[4], parts[5], parts[6]));
+
+    // Extract and format the date part as MM/DD/YYYY
+    var formattedDate = (dateObject.getMonth() + 1).toString().padStart(2, '0') +
+                        '/' +
+                        dateObject.getDate().toString().padStart(2, '0') +
+                        '/' +
+                        dateObject.getFullYear();
+
+    return formattedDate;
+}
+%>
+
 <main>
+    
     <div class="container">
 
         <!-- Filter button -->
+        <div class="dropdown">
+            <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                Filter
+            </button>
+            <ul class="dropdown-menu">
+                <li><a class="dropdown-item" id="sortByDateAsc">A->Z</a></li>
+                <li><a class="dropdown-item" id="sortByDateDesc">Z->A</a></li>
+            </ul>
+        </div>
+
         <button id="sortByDate" class="btn btn-secondary">Sort by Due Date</button>
 
         <!-- THE REST OF YOUR HTML CODE GOES HERE -->
@@ -16,53 +43,24 @@
 
         <% jobs.forEach(jobs => { %>
         <div class="card" style="width: 30rem;">
-
-            <!-- <img src="..." class="card-img-top" alt="..."> -->
-            <div class="card-body">
-                <h5 class="card-title"><%=jobs.role%></h5>
-                <p class="card-text">Company: <%=jobs.company %></p>
-                <p class="card-text">Location: <%=jobs.location %></p>
-                <p class="card-text">Date Posted: <%=jobs.date_posted %></p>
-                <a href="<%=jobs.application_link%>" class="btn btn-primary">Apply</a>
-            </div>
+          
+          <!-- <img src="..." class="card-img-top" alt="..."> -->
+          <div class="card-body">
+            <h5 class="card-title"><%=jobs.role%></h5>
+            <p class="card-text">Company: <%=jobs.company %></p>
+            <p class="card-text">Location: <%=jobs.location %></p>
+            <p class="card-text">Date Posted: <%=parseDate(jobs.date_posted) %></p>
+            
+            <a href="<%=jobs.application_link%>" class="btn btn-primary">Apply</a>
+          </div>
         </div><br>
-        <% }) %>
-
+      <% }) %>
+  
+      
+  </div>
+  
     </div>
 
 </main>
 
 <%- include ('../partials/footer') %>
-
-<script>
-    // JavaScript to handle sorting
-    document.getElementById('sortByDate').addEventListener('click', function () {
-        // Assuming jobs array has a property named 'due_date'
-        jobs.sort(function (a, b) {
-            return new Date(a.due_date) - new Date(b.due_date);
-        });
-
-        // Clear existing cards
-        document.querySelector('.container').innerHTML = '';
-
-        // Render sorted cards
-        jobs.forEach(jobs => {
-            var card = document.createElement('div');
-            card.className = 'card';
-            card.style = 'width: 30rem;';
-
-            card.innerHTML = `
-                <div class="card-body">
-                    <h5 class="card-title">${jobs.role}</h5>
-                    <p class="card-text">Company: ${jobs.company}</p>
-                    <p class="card-text">Location: ${jobs.location}</p>
-                    <p class="card-text">Date Posted: ${jobs.date_posted}</p>
-                    <a href="${jobs.application_link}" class="btn btn-primary">Apply</a>
-                </div>
-            `;
-
-            document.querySelector('.container').appendChild(card);
-        });
-    });
-</script>
-
