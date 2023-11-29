@@ -1,36 +1,39 @@
 <script>
     function addJobExperience() {
+      if(counter !=5){
       // Get the container element where job experiences will be added
-      var container = document.getElementById('work_experience');
-      // Create a new job experience section
-      var newJobExperience = document.createElement('div');
-      newJobExperience.innerHTML = `
-        <div >
-            <label style ="display: inline;" for="company_name">Company Name ${counter}: </label> <br>
-            <input required type="text" id="company_name_${counter}" name="company_name" />
-        </div>
-        <div >
-            <label style ="display: inline;" for="position">Position ${counter}</label> <br>
-            <input required type="text" id="position_${counter}" name="position" />
-        </div>
-        <div >
-            <label style ="display: inline;" for="employment_time">Time in postion ${counter}</label> <br>
-            <input required type="text" id="employment_time_${counter}" name="employment_time" />
-        </div>
-        <div >
-            <label style ="display: inline;" for="achievements">Achievements ${counter}</label> <br>
-            <input required type="text" id="achievements_${counter}" name="achievements" />
-        </div>
-      `;
+        var container = document.getElementById('work_experience');
+        // Create a new job experience section
+        var newJobExperience = document.createElement('div');
+        newJobExperience.innerHTML = `
+            <div >
+                <label style ="display: inline;" for="company_name">Company Name ${counter}: </label> <br>
+                <input required type="text" id="company_name_${counter}" name="company_name" />
+            </div>
+            <div >
+                <label style ="display: inline;" for="position">Position ${counter}</label> <br>
+                <input required type="text" id="position_${counter}" name="position" />
+            </div>
+            <div >
+                <label style ="display: inline;" for="employment_time">Time in postion ${counter}</label> <br>
+                <input required type="text" id="employment_time_${counter}" name="employment_time" />
+            </div>
+            <div >
+                <label style ="display: inline;" for="achievements">Achievements ${counter}</label> <br>
+                <input required type="text" id="achievements_${counter}" name="achievements" />
+            </div>
+        `;
 
-      // Append the new job experience section to the container
-      counter = counter +1;
-      container.appendChild(newJobExperience);
+        // Append the new job experience section to the container
+        counter = counter +1;
+        container.appendChild(newJobExperience);
+      }
     }
 </script>
 
 <script>
     function addReference() {
+      if(counter_1!=3){
       // Get the container element where job experiences will be added
       var container = document.getElementById('references');
       // Create a new job experience section
@@ -53,12 +56,18 @@
       // Append the new job experience section to the container
       counter_1 = counter_1 +1;
       container.appendChild(newReference);
+      }
     }
 </script>
-
+<script>
+    function submitForm() {
+        console.log("Hello there");
+        document.getElementById("myForm").style.display = "none";
+    }
+</script>
 <div class="border"
     style="text-align: center; margin-left:auto; margin-right:auto;width:500px; margin-top:150px">
-        <form action="" method="POST" >
+        <form action="/information" method="POST" id="information">
             <h3>Personal Information</h3>
             <div >
                 <label style ="display: inline;" for="first_name">First Name: </label> <br>
@@ -81,8 +90,12 @@
                 <input required type="text" id="street_address" name="street_address" />
             </div>
             <div >
-                <label style ="display: inline;" for="city_state">City, abreviated state ex: CO: </label> <br>
-                <input required type="text" id="city_state" name="city_state" />
+                <label style ="display: inline;" for="city">City: </label> <br>
+                <input required type="text" id="city" name="city" />
+            </div>
+            <div >
+                <label style ="display: inline;" for="state">State: </label> <br>
+                <input required type="text" id="state" name="state" />
             </div>
             <div >
                 <label style ="display: inline;" for="zip_code">Zip code: </label> <br>
@@ -124,7 +137,7 @@
                 </div>
             </div> <br>
             <script>var counter = 2;</script>
-            <button type="button" onclick="addJobExperience()">More Work Experience Click Here.</button>
+            <button type="button" onclick="addJobExperience()">More Work Experience Click Here. Max of 4 Jobs!</button>
             <h3>Skills</h3>
             <div >
                 <label style ="display: inline;" for="skills">Skills: </label> <br>
@@ -138,7 +151,7 @@
                 </div>
                 <div >
                     <label style ="display: inline;" for="referal_email">Referal Email </label> <br>
-                    <input required type="email" id="referal_email" name="referal_name" />
+                    <input required type="email" id="referal_email" name="referal_email" />
                 </div>
                 <div >
                     <label style ="display: inline;" for="referal_number">Referal Phone Number</label> <br>
@@ -146,12 +159,12 @@
                 </div>
             </div> <br>
             <script>var counter_1 = 2;</script>
-            <button type="button" onclick="addReference()">More Referals Click Here.</button> <br>
+            <button type="button" onclick="addReference()">More Referals Click Here. Max of 2 Referals!</button> <br>
             <h3>Resume</h3>
             <div >
                 <label style ="display: inline;" for="resume">Insert Resume Below</label> <br> <br>
                 <input required type="file" id="resume" name="resume" />
             </div>
-            <input style="margin-top:30px; margin-bottom: 30px;" type="submit" value="Submit Job Application Filler Form" />
+            <input style="margin-top:30px; margin-bottom: 30px;" type="submit" value="Submit Job Application Filler Form" onclick="submitForm()"/>
         </form>
 </div>

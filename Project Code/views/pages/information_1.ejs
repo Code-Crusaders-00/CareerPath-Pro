@@ -1,0 +1,24 @@
+<%- include ('../partials/head') %>
+<%- include ('../partials/nav') %>
+<%- include ('../partials/alerts') %>'
+
+<main>
+    <style>
+        h3 {
+            font-family: 'Times New Roman', Times, serif;
+        }
+        h2 {
+            font-family: 'Times New Roman', Times, serif;
+            font-size: medium;
+        }
+    </style>
+    <center><h1 style="font-family: 'Times New Roman', Times, serif;"><%= user.formData.first_name %>'s Submitted Application Information</h1> </center>
+    <br><br>
+    <center><h3>Personal Information</h3></center>
+    <center><h2>Name: <%= user.formData.first_name %> <%= user.formData.last_name %></h2></center>
+    <center><h2>Phone Number: <%= user.formData.phone_number %></h2></center>
+    <center><h2>Email: <%= user.formData.email %></h2></center>
+    <center><h2 style="font-size: large">Address:%></h2></center>
+    <center><h2><%= user.formData.street_address %> <%= user.formData.city %>, <%= user.formData.state %></h2></center>
+</main>
+<%- include ('../partials/footer') %>

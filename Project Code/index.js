@@ -77,6 +77,39 @@ app.post('/register', async (req, res) => {
     }
 })
 
+
+app.get('/information', (req, res) => {
+    res.render('pages/informations', {user: req.session.user, error: req.session.error});
+});
+
+app.post('/information', async (req, res) => {
+    const query = `INSERT INTO personal_info (first_name, last_name, phone_number, email, street_address, city, state, zip_code, college, degree, high_school, company_name, position, employment_time, achievements, skills, referal_name, referal_email, referal_number, resume, user_id_1)
+                   VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, ARRAY[$12, $13, $14, $15], ARRAY[$16, $17, $18, $19], ARRAY[$20, $21, $22, $23], ARRAY[$24, $25, $26, $27], $28, ARRAY[$29, $30], ARRAY[$31, $32], ARRAY[$33, $34], $35, $36)`;
+    const query_1 = 'select * from personal_info';
+    try {
+        await db.none(query, [req.body.first_name, req.body.last_name, req.body.phone_number, req.body.email_1, req.body.street_address, req.body.city, req.body.state, req.body.zip_code, req.body.college, req.body.degree, req.body.high_school, req.body.company_name, req.body.company_name_2, req.body.company_name_3, req.body.company_name_4, req.body.position, req.body.position_2, req.body.position_3, req.body.position_4, req.body.employment_time, req.body.employment_time_2, req.body.employment_time_3, req.body.employment_time_4, req.body.achievements, req.body.achievements_2, req.body.achievements_3, req.body.achievements_4, req.body.skills, req.body.referal_name, req.body.referal_name_2, req.body.referal_email, req.body.referal_email_2, req.body.referal_number, req.body.referal_number_2, req.body.resume, req.session.user.userid])
+            req.session.user.formData = req.body;
+            req.session.save();
+            console.log(`Information enterted successfully ${req.body.first_name}`);
+            req.session.error = {
+                err_level: "success",
+                err_msg: "You have successfully inputed your information."
+            }
+            res.redirect('/information_1');
+    } catch (error) {
+        console.log(`Failed to submit information: ${error}`);
+        req.session.error = {
+            err_level: "danger",
+            err_msg: "Failed to submit information. Please try again. Error: " + error.message || error
+        }
+        res.redirect('/information');
+    }
+})
+
+app.get('/information_1', (req, res) => {
+    res.render('pages/information_1', {user: req.session.user, error: req.session.error});
+});
+
 /**
  * @swagger
  * /api/jobs:
@@ -242,7 +275,7 @@ app.post('/login', async (req, res) => {
     const email = req.body.email;
     const query = "select * from users where email = $1";
     const values = [email];
-
+    
     if (email != null) {
         try {
             const data = await db.oneOrNone(query, values); // Use oneOrNone instead of one
@@ -251,12 +284,15 @@ app.post('/login', async (req, res) => {
                 const match = await bcrypt.compare(req.body.password, data.password);
                 if (match) {
                     console.log("Password is correct");
+                    const query_2 = `SELECT * FROM personal_info WHERE user_id_1 = (SELECT userID FROM users WHERE userID = ${data.userid});`;
+                    const data_2 = await db.oneOrNone(query_2);
                     const user = {
                         userid: data.userid,
                         firstName: data.firstname,
                         lastName: data.lastname,
                         email: data.email,
-                        password: data.password
+                        password: data.password,
+                        formData: data_2
                     };
                     req.session.user = user;
                     req.session.save();
@@ -368,10 +404,10 @@ app.get('/home', async (req, res) => {
         const jobs = await fetch("http://localhost:3000/api/jobs?limit=15&random=true").then((res) =>
         res.json()
     );
-    res.render('pages/home', {user: req.session.user, error: req.session.error, jobs });
+    res.render('pages/home', {user: req.session.user, error: req.session.error, jobs});
     } catch (error) {
         console.log(error);
-        res.render('pages/home', {user: req.session.user, error: req.session.error, jobs: [] });
+        res.render('pages/home', {user: req.session.user, error: req.session.error, jobs: []});
     }
 });
 

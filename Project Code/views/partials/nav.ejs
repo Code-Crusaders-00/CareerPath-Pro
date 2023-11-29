@@ -29,6 +29,16 @@
                     <li class="nav-item">
                         <a class="nav-link" href="/jobs" style="margin-left: 20px;">Job Board</a>
                     </li>
+                    <% if (locals.user.formData == null) { %>
+                        <li class="nav-item">
+                            <a class="nav-link" href="/information" style="margin-left: 20px;">Enter Application Information</a>
+                        </li>
+                    <% } %>
+                    <% if (locals.user.formData != null) { %>
+                        <li class="nav-item">
+                            <a class="nav-link" href="/information_1" style="margin-left: 20px;">Veiw Application Information</a>
+                        </li>
+                    <% } %>
                     <% } %>
                 </ul>
                 <% if (locals.user) { %> 
