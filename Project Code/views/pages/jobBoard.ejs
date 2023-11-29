@@ -1,66 +1,169 @@
 <%- include ('../partials/head') %>
 <%- include ('../partials/nav') %>
 
-<%function parseDate(dateString) {
-    // Parse date string in the format "2023-11-06T00:00:00.000Z"
+
+
+<script>
+    function toggleDescription(jobId) {
+        console.log("Toggle Description accessed")
+        var description = document.getElementById('description' + jobId);
+        description.style.display = (description.style.display === 'none' || description.style.display === '') ? 'block' : 'none';
+    }
+
+    function sortByDate(order) {
+        jobs.sort(function (a, b) {
+            var dateA = new Date(a.date_posted);
+            var dateB = new Date(b.date_posted);
+
+            return order === 'asc' ? dateA - dateB : dateB - dateA;
+        });
+    }
+
+    function renderJobCards() {
+        var jobCardsContainer = document.querySelector('.job-cards-container');
+        jobCardsContainer.innerHTML = '';
+
+        jobs.forEach(function (job) {
+            var card = document.createElement('div');
+            card.className = 'card';
+            card.style = 'width: 30rem;';
+
+            var formattedDate = parseDate(job.date_posted);
+
+            card.innerHTML = `
+                <div class="card-body">
+                    <h5 class="card-title">${job.role}</h5>
+                    <p class="card-text">Company: ${job.company}</p>
+                    <p class="card-text">Location: ${job.location}</p>
+                    <p class="card-text">Date Posted: ${formattedDate}</p>
+                    <button class="btn btn-info" onclick="toggleDescription('${job.id}')">Show Description</button>
+                    <div class="job-description" id="description${job.id}" style="display: none;">
+                        ${job.description}
+                        <a href="${job.application_link}" class="btn btn-primary">Apply</a>
+                    </div>
+                </div>
+            `;
+
+            jobCardsContainer.appendChild(card);
+        });
+    }
+
+    function sortByDateAndRender(order) {
+        sortByDate(order);
+        renderJobCards();
+    }
+
+    // Example event listener for the "Sort by Date" button
+    document.getElementById('sortByDateButton').addEventListener('click', function () {
+        var order = document.getElementById('sortOrder').value; // You may need to adjust this based on your HTML
+        sortByDateAndRender(order);
+    });
+</script>
+
+
+<style>
+    body {
+      padding-top: 20px;
+    }
+  
+    .container {
+      max-width: 800px; /* Adjust based on your design preferences */
+      margin: 0 auto;
+    }
+  
+    .job-cards-container {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+    }
+  
+    .card {
+      margin-bottom: 20px;
+    }
+  </style>
+  
+
+<script src="/path/to/jobBoardUpdate.js"></script>
+<%
+function parseDate(dateString) {
     var parts = dateString.split(/[-T:Z.]/);
     var dateObject = new Date(Date.UTC(parts[0], parts[1] - 1, parts[2], parts[3], parts[4], parts[5], parts[6]));
-
-    // Extract and format the date part as MM/DD/YYYY
     var formattedDate = (dateObject.getMonth() + 1).toString().padStart(2, '0') +
                         '/' +
                         dateObject.getDate().toString().padStart(2, '0') +
                         '/' +
                         dateObject.getFullYear();
-
+                        
     return formattedDate;
 }
 %>
 
-<main>
-    
-    <div class="container">
+<!-- ... (your existing code) -->
 
+<main>
+    <div class="container">
         <!-- Filter button -->
         <div class="dropdown">
-            <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                Filter
-            </button>
-            <ul class="dropdown-menu">
-                <li><a class="dropdown-item" id="sortByDateAsc">A->Z</a></li>
-                <li><a class="dropdown-item" id="sortByDateDesc">Z->A</a></li>
-            </ul>
+            <label for="sortOrder">Sort by Date:</label>
+            <select id="sortOrder">
+                <option value="asc">Ascending</option>
+                <option value="desc">Descending</option>
+            </select>
+            <button class="btn btn-secondary" id="sortByDateButton">Sort</button>
         </div>
 
-        <button id="sortByDate" class="btn btn-secondary">Sort by Due Date</button>
+        <div class="job-container">
+            <div class="job-cards-container">
+                <% jobs.forEach(function(job) {%>
+                    <div class="card" style="width: 30rem;">
+                        <div class="card-body">
+                            <h5 class="card-title"><%= job.role %></h5>
+                            <p class="card-text">Company: <%= job.company %></p>
+                            <p class="card-text">Location: <%= job.location %></p>
+                            <p class="card-text">Date Posted: <%= parseDate(job.date_posted) %></p>
+                            <button class="btn btn-info" onclick="toggleDescription('<%= job.id %>')">Learn More</button>
+                            <div class="job-description" id="description<%= job.id %>" style="display: none;">
+                                <br>
+                                 <% var sponsorship = ''
+                                 if(job.offers_sponsorship == 0) { sponsorship = "No"}
+                                 else {
+                                    sponsorship = "Yes"
+                                 } %>
 
-        <!-- THE REST OF YOUR HTML CODE GOES HERE -->
-        <% if (locals.message) { %>
-        <div class="alert alert-<%- locals.error ? 'danger' : 'success' %>" role="alert">
-            <%= message %>
+                                <% var citizenship = ''
+                                 if(job.requires_us_citizenship == 0) { citizenship = "No"}
+                                 else {
+                                    citizenship = "Yes"
+                                 } %>
+                                 
+                            
+                                <% var jobType = ''
+                                 if(job.internship == 0) { jobType = "Employee"}
+                                 else {
+                                    jobType = "Internship"
+                                 } %> 
+                                 <div class="d-grid gap-3">
+                                    <div class="p-2 bg-light border">Offers Sponsorship: <%= sponsorship%></div>
+                                    <div class="p-2 bg-light border">Requires US Citizenship: <%= citizenship %></div>
+                                    <div class="p-2 bg-light border">Job Type: <%= jobType %></div>
+                                  </div>
+                                  <br>
+                                <a href="<%= job.application_link %>" class="btn btn-primary">Apply</a>
+                            </div>
+                        
+                        </div>
+                    </div><br>
+                <% }) %>
+            </div>
+            <div class="job-descriptions-container">
+                <!-- Job descriptions will be dynamically added here -->
+            </div>
         </div>
-        <% } %>
-
-        <% jobs.forEach(jobs => { %>
-        <div class="card" style="width: 30rem;">
-          
-          <!-- <img src="..." class="card-img-top" alt="..."> -->
-          <div class="card-body">
-            <h5 class="card-title"><%=jobs.role%></h5>
-            <p class="card-text">Company: <%=jobs.company %></p>
-            <p class="card-text">Location: <%=jobs.location %></p>
-            <p class="card-text">Date Posted: <%=parseDate(jobs.date_posted) %></p>
-            
-            <a href="<%=jobs.application_link%>" class="btn btn-primary">Apply</a>
-          </div>
-        </div><br>
-      <% }) %>
-  
-      
-  </div>
-  
     </div>
-
 </main>
 
+<!-- ... (your existing code) -->
+
+
 <%- include ('../partials/footer') %>
+
