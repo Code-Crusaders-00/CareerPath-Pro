@@ -18,7 +18,49 @@
     <center><h2>Name: <%= user.formData.first_name %> <%= user.formData.last_name %></h2></center>
     <center><h2>Phone Number: <%= user.formData.phone_number %></h2></center>
     <center><h2>Email: <%= user.formData.email %></h2></center>
-    <center><h2 style="font-size: large">Address:%></h2></center>
-    <center><h2><%= user.formData.street_address %> <%= user.formData.city %>, <%= user.formData.state %></h2></center>
+    <center><h2 style="font-size: large">Address:</h2></center>
+    <center><h2><%= user.formData.street_address %> <%= user.formData.city %>, <%= user.formData.state %></h2></center> <br>
+    <center><h3>Educational Background</h3></center>
+    <center><h2>College Attended: <%= user.formData.college %></h2></center>
+    <center><h2>Degree: <%= user.formData.degree %></h2></center>
+    <center><h2>High School: <%= user.formData.high_school %></h2></center> <br>
+    <center><h3>Previous Work Experience</h3></center> 
+    <center><h2 style="font-size: large"><%= user.formData.company_name[0] %>:</h2></center>
+    <center><h2>Postion: <%= user.formData.position[0] %></h2></center> 
+    <center><h2>Time of Employment: <%= user.formData.employment_time[0] %></h2></center> 
+    <center><h2>Achievements: <%= user.formData.achievements[0] %></h2></center> 
+    <% if (user.formData.company_name[1]){ %>
+        <center><h2 style="font-size: large"><%= user.formData.company_name[1] %>:</h2></center>
+        <center><h2>Postion: <%= user.formData.position[1] %></h2></center> 
+        <center><h2>Time of Employment: <%= user.formData.employment_time[1] %></h2></center> 
+        <center><h2>Achievements: <%= user.formData.achievements[1] %></h2></center> 
+    <% } %>
+    <% if (user.formData.company_name[2]){ %>
+        <center><h2 style="font-size: large"><%= user.formData.company_name[2] %>:</h2></center>
+        <center><h2>Postion: <%= user.formData.position[2] %></h2></center> 
+        <center><h2>Time of Employment: <%= user.formData.employment_time[2] %></h2></center> 
+        <center><h2>Achievements: <%= user.formData.achievements[2] %></h2></center> 
+    <% } %>
+    <% if (user.formData.company_name[3]){ %>
+        <center><h2 style="font-size: large"><%= user.formData.company_name[3] %>:</h2></center>
+        <center><h2>Postion: <%= user.formData.position[3] %></h2></center> 
+        <center><h2>Time of Employment: <%= user.formData.employment_time[3] %></h2></center> 
+        <center><h2>Achievements: <%= user.formData.achievements[3] %></h2></center> 
+    <% } %> <br>
+    <center><h3>Skills</h3></center> 
+    <center><h2><%= user.formData.skills %></h2></center> <br>
+    <center><h3>Referals</h3></center>
+    <center><h2>Referals name: <%= user.formData.referal_name[0] %></h2></center>
+    <center><h2>Referals email: <%= user.formData.referal_email[0] %></h2></center>
+    <center><h2>Referals phone number: <%= user.formData.referal_number[0] %></h2></center> <br>
+    <% if (user.formData.referal_name[1]){ %>
+        <center><h2 style="font-size: large">Second Referal:</h2></center>
+        <center><h2>Referals name: <%= user.formData.referal_name[1] %></h2></center>
+        <center><h2>Referals email: <%= user.formData.referal_email[1] %></h2></center>
+        <center><h2>Referals phone number: <%= user.formData.referal_number[1] %></h2></center>
+    <% } %> <br>
+    <center><h3>Resume</h3></center>
+    <center><h2><%= user.formData.resume %></h2></center>
+
 </main>
 <%- include ('../partials/footer') %>
