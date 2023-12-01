@@ -7,25 +7,6 @@
         margin: auto;
     }
 
-    #del-btn {
-        color: 	#E60000;
-        border-color: 	#E60000;
-    }
-
-    #del-btn:hover {
-        background-color: 	#E60000;
-        color: white;
-    }
-
-    #add-btn {
-        color: #32A431;
-        border-color: #32A431;
-    }
-
-    #add-btn:hover {
-        background-color: #32A431;
-        color: white;
-    }
 </style>
 
 <main>
@@ -33,7 +14,7 @@
         <% if (apps.length == 0) { %>
             <h1>No applications added yet!</h1>
         <% } else { %>
-            <table class="table">
+            <table class="table table-hover text-center align-middle mt-5 mb-5">
                 <thead>
                 <tr>
                     <th scope="col">appID</th>
@@ -41,6 +22,7 @@
                     <th scope="col">Company</th>
                     <th scope="col">Industry</th>
                     <th scope="col">Description</th>
+                    <th scope="col">Actions</th>
                 </tr>
                 </thead>
                 <tbody>
@@ -52,17 +34,19 @@
                         <td><%= apps[i].industry %></td>
                         <td><%= apps[i].description %></td>
                         <td>
+                        <div class="btn-group-vertical">
                             <form action="/job-applications/edit/<%= apps[i].appid %>" method="GET">
-                                <button type="submit" class="btn btn-outline-primary" id="edit-btn">
+                                <button type="submit" class="btn" id="edit-btn">
                                     Edit
                                 </button>
                             </form>
                             <form action="/job-applications/delete" method="POST">
                                 <input type="hidden" name="applicationid" value="<%= apps[i].appid %>">
-                                <button type="submit" class="btn btn-outline-primary" id="del-btn">
+                                <button type="submit" class="btn" id="del-btn">
                                     Delete
                                 </button>
                             </form>
+                        </div>
                         </td>
                     </tr>
                     <% } %>
@@ -70,7 +54,7 @@
             </table>
         <% } %>
         <a href="/job-applications/add">
-        <button type="submit" class="btn btn-outline-primary" id="add-btn">
+        <button type="submit" class="btn btn-primary" id="add-btn">
             Add Application
         </button>
         </a>
