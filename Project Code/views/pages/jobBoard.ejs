@@ -5,73 +5,36 @@
 
 
 <script>
-    console.log("jobsort array",jobs)
-    // // Initialize an empty array to store jobs
-    
-    
-    
+   
     // Function to toggle the job description visibility
     function toggleDescription(jobId) {
         var description = document.getElementById('description' + jobId);
         description.style.display = (description.style.display === 'none' || description.style.display === '') ? 'block' : 'none';
     }
-
-    // Function to sort jobs by date
-    function sortByDate(order) {
-        //console.log(jobsSort)
-        jobs.sort(function (a, b) {
-            var dateA = new Date(a.date_posted);
-            var dateB = new Date(b.date_posted);
-            console.log(dateA)
-            console.log(dateB)
-
-
-            console.log("Sort accessed")
-
-            return order === 'asc' ? dateA - dateB : dateB - dateA;
-        });
-        renderJobCards();
-    }
-
-    // Function to render job cards
-    function renderJobCards() {
-        var jobCardsContainer = document.querySelector('.job-cards-container');
-        jobCardsContainer.innerHTML = '';
-
-        jobs.forEach(function (job) {
-            var card = document.createElement('div');
-            card.className = 'card';
-            card.style = 'width: 30rem;';
-
-            var formattedDate = parseDate(job.date_posted);
-
-            card.innerHTML = `
-                <div class="card-body">
-                    <h5 class="card-title">${job.role}</h5>
-                    <p class="card-text">Company: ${job.company}</p>
-                    <p class="card-text">Location: ${job.location}</p>
-                    <p class="card-text">Date Posted: ${formattedDate}</p>
-                    <button class="btn btn-info" onclick="toggleDescription('${job.id}')">Show Description</button>
-                    <div class="job-description" id="description${job.id}" style="display: none;">
-                        ${job.description}
-                        <a href="${job.application_link}" class="btn btn-primary">Apply</a>
-                    </div>
-                </div>
-            `;
-
-            jobCardsContainer.appendChild(card);
-        });
-    }
-
-    // Function to sort by date and render job cards
-    function sortByDateAndRender(order) {
-        console.log("SortByDate and Render")
-        console.log(order)
-        sortByDate(order);
-        renderJobCards();
-    }
-
     
+    function searchJobs() {
+        var searchTerm = document.getElementById('jobSearch').value.toLowerCase();
+        var jobCards = document.querySelectorAll('.card');
+
+        jobCards.forEach(function (card) {
+            var jobTitle = card.querySelector('.card-title').innerText.toLowerCase();
+
+            if (jobTitle.includes(searchTerm)) {
+                card.style.display = 'block';
+                
+            } else {
+                card.style.display = 'none';
+            }
+        });
+    }
+    function resetSearch() {
+        var jobCards = document.querySelectorAll('.card');
+        jobCards.forEach(function (card) {
+            card.style.display = 'block';
+        });
+        document.getElementById('jobSearch').value = '';
+    }
+
 </script>
 
 
@@ -81,7 +44,7 @@
     }
   
     .container {
-      max-width: 800px; /* Adjust based on your design preferences */
+      max-width: 800px; 
       margin: 0 auto;
     }
   
@@ -89,15 +52,14 @@
       display: flex;
       flex-wrap: wrap;
       justify-content: space-between;
+     
     }
   
     .card {
+      display: flex;
       margin-bottom: 20px;
     }
 
-    #sortOrder {
-        width: 50%; 
-    }
   </style>
   
 
@@ -120,19 +82,25 @@ function parseDate(dateString) {
 
 <main>
     <div class="container">
+        <br>
+        <div class="d-flex">
+            <div class="form-floating me-2" style="width: 60%;">
+                <input type="text" class="form-control" id="jobSearch" placeholder="Search by Title">
+                <label for="floatingPassword">Search</label>
+            </div>
+            <button class="btn btn-primary me-2" onclick="searchJobs()">Search</button>
+            <button class="btn btn-secondary" onclick="resetSearch()">Reset</button>
+        </div>
         
-            <select class="form-select form-select-lg mb-3" aria-label=".form-select-lg example" id="sortOrder">
-                <option selected>Sort by Date:</option>
-                <option value="asc">Ascending</option>
-                <option value="desc">Descending</option>
-              </select>
-            
         
 
-        <div class="job-container">
-            <div class="job-cards-container">
+
+        <br>
+        <div class="container">
+            <div class="row row-cols-2">
                 <% jobs.forEach(function(job) {%>
-                    <div class="card" style="width: 30rem;">
+                    <div class="col">
+                    <div class="card">
                         <div class="card-body">
                             <h5 class="card-title"><%= job.role %></h5>
                             <p class="card-text">Company: <%= job.company %></p>
@@ -169,22 +137,14 @@ function parseDate(dateString) {
                             </div>
                         
                         </div>
-                    </div><br>
+                    </div>
+                </div><br>
                 <% }) %>
             </div>
             
         </div>
     </div>
 </main>
-
-<script> 
-// Example event listener for the "Sort by Date" button
-document.getElementById('sortOrder').addEventListener('change', function () {
-        console.log("Last step")
-        var order = document.getElementById('sortOrder').value;
-        sortByDateAndRender(order);
-    });
-</script>
 
 
 <%- include ('../partials/footer') %>
