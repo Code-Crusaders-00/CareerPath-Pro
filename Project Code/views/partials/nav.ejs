@@ -1,55 +1,78 @@
 <header>
-    <nav class="navbar navbar-expand-sm border-bottom bg-body-tertiary">
-        <div class="container-fluid">
-            <a class="navbar-brand" href="/">CareerPath Pro</a>
-            <button
-                    class="navbar-toggler ms-auto"
-                    type="button"
-                    data-bs-toggle="collapse"
-                    data-bs-target="#navbar-collapse"
-                    aria-controls="navbar"
-                    aria-expanded="false"
-                    aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="navbar-collapse">
-                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-                    <% if (!locals.user) { %>
-                    <li class="nav-item">
-                        <a class="nav-link" href="/register">Register</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="/login" style="margin-left: 20px;">Login</a>
-                    </li>
-                    <% } %>
-                    <% if (locals.user) { %>
-                    <li class="nav-item">
-                        <a class="nav-link" href="/home">Home</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="/jobs" style="margin-left: 20px;">Job Board</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="/job-applications" style="margin-left: 20px;">Submitted Applications</a>
-                    </li>
-                    <% if (locals.user.formData == null) { %>
-                        <li class="nav-item">
-                            <a class="nav-link" href="/information" style="margin-left: 20px;">Enter Application Information</a>
-                        </li>
-                    <% } %>
-                    <% if (locals.user.formData != null) { %>
-                        <li class="nav-item">
-                            <a class="nav-link" href="/information_1" style="margin-left: 20px;">Veiw Application Information</a>
-                        </li>
-                    <% } %>
-                    <% } %>
-                </ul>
-                <% if (locals.user) { %>
-                <div class="nav-item me-1">
-                    <a class="nav-link" href="/logout">Logout</a>
-                </div>
-                <% } %>
-            </div>
-        </div>
-    </nav>
+	<nav class="navbar navbar-expand-sm border-bottom bg-body-tertiary">
+		<div class="container-fluid">
+			<a class="navbar-brand" href="/">CareerPath Pro</a>
+			<button
+				class="navbar-toggler ms-auto"
+				type="button"
+				data-bs-toggle="collapse"
+				data-bs-target="#navbar-collapse"
+				aria-controls="navbar"
+				aria-expanded="false"
+				aria-label="Toggle navigation"
+			>
+				<span class="navbar-toggler-icon"></span>
+			</button>
+			<div class="collapse navbar-collapse" id="navbar-collapse">
+				<ul class="navbar-nav me-auto mb-2 mb-lg-0">
+					<% if (!locals.user) { %>
+					<li class="nav-item">
+						<a class="nav-link" href="/register">Register</a>
+					</li>
+					<li class="nav-item">
+						<a
+							class="nav-link"
+							href="/login"
+							style="margin-left: 20px"
+							>Login</a
+						>
+					</li>
+					<% } %> <% if (locals.user) { %>
+					<li class="nav-item">
+						<a class="nav-link" href="/home">Home</a>
+					</li>
+					<li class="nav-item">
+						<a
+							class="nav-link"
+							href="/jobs"
+							style="margin-left: 20px"
+							>Job Board</a
+						>
+					</li>
+					<li class="nav-item">
+						<a
+							class="nav-link"
+							href="/job-applications"
+							style="margin-left: 20px"
+							>Submitted Applications</a
+						>
+					</li>
+					<% if (locals.user.formData == null) { %>
+					<li class="nav-item">
+						<a
+							class="nav-link"
+							href="/information"
+							style="margin-left: 20px"
+							>Enter Application Information</a
+						>
+					</li>
+					<% } %> <% if (locals.user.formData != null) { %>
+					<li class="nav-item">
+						<a
+							class="nav-link"
+							href="/information_1"
+							style="margin-left: 20px"
+							>Veiw Application Information</a
+						>
+					</li>
+					<% } %> <% } %>
+				</ul>
+				<% if (locals.user) { %>
+				<div class="nav-item me-1">
+					<a class="nav-link" href="/logout">Logout</a>
+				</div>
+				<% } %>
+			</div>
+		</div>
+	</nav>
 </header>

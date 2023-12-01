@@ -1,40 +1,59 @@
-<%- include ('../partials/head') %>
-<%- include ('../partials/nav') %>
+<%- include ('../partials/head') %> <%- include ('../partials/nav') %>
 
 <style>
-    #container {
-        width: 90%;
-        margin: auto;
-    }
+	#container {
+		width: 90%;
+		margin: auto;
+	}
 </style>
 
 <main>
-    <div class="container">
-        <h2>Add Application</h2>
-        <form method="POST" action="/job-applications/add">
-            <div class="mb-3">
-            <label for="name" class="form-label">Name</label>
-            <input type="text" class="form-control" id="name" name="name">
-            </div>
-            <div class="mb-3">
-                <label for="company" class="form-label">Company</label>
-                <input type="text" class="form-control" id="company" name="company">
-            </div>
-            <div class="mb-3">
-                <label for="industry" class="form-label">Industry</label>
-                <input type="text" class="form-control" id="industry" name="industry">
-            </div>
-            <div class="mb-3">
-                <label for="description" class="form-label">Description</label>
-                <input type="text" class="form-control" id="description" name="description">
-            </div>
-            <div class="mb-3">
-                <label for="status" class="form-label">Status</label>
-                <input type="text" class="form-control" id="status" name="status">
-            </div>
-            <button type="submit" class="btn btn-primary">Add</button>
-        </form>
-    </div>
+	<div class="container">
+		<h2>Add Application</h2>
+		<form method="POST" action="/job-applications/add">
+			<div class="mb-3">
+				<label for="name" class="form-label">Name</label>
+				<input type="text" class="form-control" id="name" name="name" />
+			</div>
+			<div class="mb-3">
+				<label for="company" class="form-label">Company</label>
+				<input
+					type="text"
+					class="form-control"
+					id="company"
+					name="company"
+				/>
+			</div>
+			<div class="mb-3">
+				<label for="industry" class="form-label">Industry</label>
+				<input
+					type="text"
+					class="form-control"
+					id="industry"
+					name="industry"
+				/>
+			</div>
+			<div class="mb-3">
+				<label for="description" class="form-label">Description</label>
+				<input
+					type="text"
+					class="form-control"
+					id="description"
+					name="description"
+				/>
+			</div>
+			<div class="mb-3">
+				<label for="status" class="form-label">Status</label>
+				<input
+					type="text"
+					class="form-control"
+					id="status"
+					name="status"
+				/>
+			</div>
+			<button type="submit" class="btn btn-primary">Add</button>
+		</form>
+	</div>
 </main>
 
 <%- include ('../partials/footer') %>
