@@ -119,6 +119,11 @@ app.get('/information_1', (req, res) => {
  *     tags: [Jobs]
  *     parameters:
  *       - in: query
+ *         name: full_text
+ *         schema:
+ *          type: string
+ *         description: Optional full text search.
+ *       - in: query
  *         name: company
  *         schema:
  *           type: string
@@ -202,7 +207,7 @@ app.get('/information_1', (req, res) => {
 app.get('/api/jobs', async (req, res) => {
     let count = 5;
     try {
-        const { company, role, location, offers_sponsorship, requires_us_citizenship, internship, limit, random} = req.query;
+        const { ft_search, company, role, location, offers_sponsorship, requires_us_citizenship, internship, limit, random} = req.query;
         let query = 'SELECT * FROM jobs';
         const conditions = [];
         const parameters = [];
@@ -231,6 +236,11 @@ app.get('/api/jobs', async (req, res) => {
         if (internship != null) {
             conditions.push('internship = $' + (conditions.length + 1));
             parameters.push(internship === 'true');
+        }
+        if (ft_search) {
+            // use like to search for a substring in both company and role test all lowercase
+            conditions.push('LOWER(company) LIKE LOWER($' + (conditions.length + 1) + ') OR LOWER(role) LIKE LOWER($' + (conditions.length + 1) + ')');
+            parameters.push('%' + ft_search + '%');
         }
 
         // Combine the conditions using 'AND'
@@ -418,13 +428,21 @@ app.get('/home', async (req, res) => {
 
 app.get('/jobs', async (req, res) => {
   try {
-    //const jobs = await db.any('SELECT * FROM jobs LIMIT 50 ');
-    // Make request to API
-    const jobs = await fetch("http://localhost:3000/api/jobs?limit=50").then((res) =>
-        res.json()
-    );
+    // Check if there is a query parameter for full text search
+    const ft_search = req.query.ft_search;
+    if (ft_search === undefined) {
+        jobs = await fetch("http://localhost:3000/api/jobs?limit=50").then((res) =>
+            res.json()
+        );
+        res.render("pages/jobBoard", {jobs, user: req.session.user, error: req.session.error});
+    } else {
+        jobs = await fetch(`http://localhost:3000/api/jobs?ft_search=${ft_search}&limit=50`).then((res) =>
+            res.json()
+        );
+        res.render("pages/jobBoard", {jobs, user: req.session.user, error: req.session.error});
+    }
     //res.render("pages/jobBoard", { jobs});
-    res.render("pages/jobBoard", {jobs, user: req.session.user, error: req.session.error});
+    
   } catch (error) {
     console.error(error);
     res.render("pages/jobBoard", {

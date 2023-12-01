@@ -14,50 +14,21 @@
     
     function searchJobs() {
         var searchTerm = document.getElementById('jobSearch').value.toLowerCase();
-        var jobCards = document.querySelectorAll('.card');
-
-        jobCards.forEach(function (card) {
-            var jobTitle = card.querySelector('.card-title').innerText.toLowerCase();
-
-            if (jobTitle.includes(searchTerm)) {
-                card.style.display = 'block';
-                
-            } else {
-                card.style.display = 'none';
-            }
-        });
+        window.location.href = '/jobs?ft_search=' + searchTerm;
     }
     function resetSearch() {
-        var jobCards = document.querySelectorAll('.card');
-        jobCards.forEach(function (card) {
-            card.style.display = 'block';
-        });
-        document.getElementById('jobSearch').value = '';
+        window.location.href = '/jobs';
     }
 
 </script>
 
 
 <style>
-    body {
-      padding-top: 20px;
-    }
-  
-    .container {
-      max-width: 800px; 
-      margin: 0 auto;
-    }
-  
     .job-cards-container {
       display: flex;
       flex-wrap: wrap;
       justify-content: space-between;
      
-    }
-  
-    .card {
-      display: flex;
-      margin-bottom: 20px;
     }
 
   </style>
