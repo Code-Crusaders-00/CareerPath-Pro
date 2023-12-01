@@ -60,6 +60,7 @@ To disable hot-reloading, edit `package.json` and replace `nodemon` with `node` 
 ## Running Tests
 
 ```
+docker compose up -d
 docker compose exec web npm test
 ```
 
