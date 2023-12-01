@@ -70,29 +70,16 @@ request(link_to_md, function (error, response, body) {
         console.log("Fetched the markdown content from the URL");
         const tokens = marked.lexer(body);
         const tableToken = tokens.find(token => token.type === 'table');
-        console.log(tableToken);
-        console.log(tableToken.header);
-        console.log(tableToken.rows[0]);
 
         firstRowCompany = tableToken.rows[0][0].tokens[0].tokens[0].text;
-        console.log(firstRowCompany);
-
         firstRowRole = tableToken.rows[0][1].tokens[0].text;
-        console.log(firstRowRole);
-
         firstRowLocation = tableToken.rows[0][2].tokens[0].text;
-        console.log(firstRowLocation);
-
         firstRowLink = tableToken.rows[0][3].tokens[0].raw;
         link_matches = firstRowLink.match(urlRegex);
-
         if (link_matches) {
             firstRowLink = link_matches[1];
         }
-        console.log(firstRowLink);
-
         firstRowDate = tableToken.rows[0][4].tokens[0].text;
-        console.log(firstRowDate);
 
 
         // Loop through the rows of the table
@@ -114,13 +101,9 @@ request(link_to_md, function (error, response, body) {
                 link = link_matches[1];
             }
             date = tableToken.rows[i][4].tokens[0].text;
-            console.log(date);
             date = formatDateForPostgres(date);
-            console.log(date);
 
             if (link === "🔒") {
-                console.log("Skipping 🔒 cause application is closed");
-                console.log("-----");
                 continue;
             }
 
@@ -143,15 +126,6 @@ request(link_to_md, function (error, response, body) {
             location = location.trim();
             link = link.trim();
             date = date.trim();
-
-            console.log(company);
-            console.log(role);
-            console.log(requires_us_citizenship);
-            console.log(offers_sponsorship);
-            console.log(location);
-            console.log(link);
-            console.log(date);
-            console.log("-----");
 
             previous_company = company;
 
@@ -197,6 +171,4 @@ const summer_internships_link = "https://raw.githubusercontent.com/SimplifyJobs/
 const new_grad_link = "https://raw.githubusercontent.com/SimplifyJobs/New-Grad-Positions/dev/README.md"
 
 parse_and_insert(summer_internships_link, is_internship=true)
-//parse_and_insert(new_grad_link, is_internship=false)
-
-
+parse_and_insert(new_grad_link, is_internship=false)
