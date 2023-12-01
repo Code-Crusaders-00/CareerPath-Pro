@@ -1,28 +1,50 @@
-<%- include ('../partials/head') %>
-<%- include ('../partials/nav') %>
-<%- include ('../partials/alerts') %>
+<%- include ('../partials/head') %> <%- include ('../partials/nav') %> <%-
+include ('../partials/alerts') %>
 
-<main>      
-<div class="container">
-    <div class="row justify-content-center align-items-center" style="height:100vh;">
-        <div class="col-md-4">
-        <div class="border p-4">
-        <h2 class="text-center mb-4">Login</h2>
-        <form action="/login" method="POST" style="margin-top:50px">
-            <div class="mb-3">
-            <label for="email" class="form-label">Email</label>
-            <input required type="text" class="form-control" id="email" name="email" />
-            </div>
-            <div class="mb-3">
-            <label for="password" class="form-label">Password</label>
-            <input required type="password" id="password" name="password" class="form-control" />
-            </div>
-            <button type="submit" class="btn btn-primary">Login</button>
-        </form>
-        </div>
-        </div>
-    </div>
-</div>
+<main>
+	<div class="container">
+		<div
+			class="row justify-content-center align-items-center"
+			style="height: 100vh"
+		>
+			<div class="col-md-4">
+				<div class="border p-4">
+					<h2 class="text-center mb-4">Login</h2>
+					<form
+						action="/login"
+						method="POST"
+						style="margin-top: 50px"
+					>
+						<div class="mb-3">
+							<label for="email" class="form-label">Email</label>
+							<input
+								required
+								type="text"
+								class="form-control"
+								id="email"
+								name="email"
+							/>
+						</div>
+						<div class="mb-3">
+							<label for="password" class="form-label"
+								>Password</label
+							>
+							<input
+								required
+								type="password"
+								id="password"
+								name="password"
+								class="form-control"
+							/>
+						</div>
+						<button type="submit" class="btn btn-primary">
+							Login
+						</button>
+					</form>
+				</div>
+			</div>
+		</div>
+	</div>
 </main>
 
 <%- include ('../partials/footer') %>

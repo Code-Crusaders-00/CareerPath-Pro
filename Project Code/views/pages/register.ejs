@@ -1,36 +1,68 @@
-<%- include ('../partials/head') %>
-<%- include ('../partials/nav') %>
-<%- include ('../partials/alerts') %>'
+<%- include ('../partials/head') %> <%- include ('../partials/nav') %> <%-
+include ('../partials/alerts') %>'
 
 <div class="container">
-        <div class="row justify-content-center align-items-center" style="height:100vh;">
-            <div class="col-md-4">
-                <div class="border p-4">
-                    <!-- Registration Form -->
-                        <h2 class="text-center mb-4">Register</h2>
-                    <form action="/register" method="POST">
-                        <div class="form-group mb-3">
-                            <label for="inputFirstName">First Name</label>
-                            <input type="text" class="form-control" name="firstNAME" id="inputFirstName" placeholder="Enter first name" required>
-                        </div>
-                        <div class="form-group mb-3">
-                            <label for="inputLastName">Last Name</label>
-                            <input type="text" class="form-control" name="lastNAME" id="inputLastName" placeholder="Enter last name" required>
-                        </div>
-                        <div class="form-group mb-3">
-                            <label for="inputEmail">Email address</label>
-                            <input type="email" class="form-control" name="email" id="inputEmail" placeholder="Enter email" required>
-                        </div>
-                        <div class="form-group mb-3">
-                            <label for="inputPassword">Password</label>
-                            <input type="password" class="form-control" name="password" id="inputPassword" placeholder="Password" required>
-                        </div>
-                        <button type="submit" class="btn btn-primary btn-block">Register</button>
-                    </form>
-                    <!-- /Registration Form -->
-                </div>
-            </div>
-        </div>
-    </div>
+	<div
+		class="row justify-content-center align-items-center"
+		style="height: 100vh"
+	>
+		<div class="col-md-4">
+			<div class="border p-4">
+				<!-- Registration Form -->
+				<h2 class="text-center mb-4">Register</h2>
+				<form action="/register" method="POST">
+					<div class="form-group mb-3">
+						<label for="inputFirstName">First Name</label>
+						<input
+							type="text"
+							class="form-control"
+							name="firstNAME"
+							id="inputFirstName"
+							placeholder="Enter first name"
+							required
+						/>
+					</div>
+					<div class="form-group mb-3">
+						<label for="inputLastName">Last Name</label>
+						<input
+							type="text"
+							class="form-control"
+							name="lastNAME"
+							id="inputLastName"
+							placeholder="Enter last name"
+							required
+						/>
+					</div>
+					<div class="form-group mb-3">
+						<label for="inputEmail">Email address</label>
+						<input
+							type="email"
+							class="form-control"
+							name="email"
+							id="inputEmail"
+							placeholder="Enter email"
+							required
+						/>
+					</div>
+					<div class="form-group mb-3">
+						<label for="inputPassword">Password</label>
+						<input
+							type="password"
+							class="form-control"
+							name="password"
+							id="inputPassword"
+							placeholder="Password"
+							required
+						/>
+					</div>
+					<button type="submit" class="btn btn-primary btn-block">
+						Register
+					</button>
+				</form>
+				<!-- /Registration Form -->
+			</div>
+		</div>
+	</div>
+</div>
 
 <%- include ('../partials/footer') %>

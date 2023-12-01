@@ -7,7 +7,7 @@ const bcrypt = require('bcrypt'); //  To hash passwords
 const swaggerUi = require('swagger-ui-express');
 const swaggerSpec = require('./swagger');
 
-// TO DO: Connect to database stuff
+// Database Configuration
 const dbConfig = {
     host: 'db', // the database server
     port: 5432, // the database port
@@ -17,10 +17,10 @@ const dbConfig = {
 };
 const db = pgp(dbConfig);
 
-// test your database
+// Test database connection
 db.connect()
     .then(obj => {
-        console.log('Database connection successful'); // you can view this message in the docker compose logs
+        console.log('Database connection successful');
         obj.done(); // success, release the connection;
     })
     .catch(error => {
@@ -39,23 +39,30 @@ app.use(
     })
 );
 
+// parse application/x-www-form-urlencoded
 app.use(
     bodyParser.urlencoded({
         extended: true,
     })
 );
 
+// Serve Swagger UI / API Documentations
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
+// Home Page
 app.get('/', (req, res) => {
+    // Redirect to login page
     res.redirect('/login');
 });
 
+// Register Page
 app.get('/register', (req, res) => {
-    res.render('pages/register', {error: req.session.error});
+    res.render('pages/register', { error: req.session.error });
 });
 
+// Handle Registeration
 app.post('/register', async (req, res) => {
+    // Hash password 
     const hash = await bcrypt.hash(req.body.password, 10);
     const query = `INSERT INTO users (password, firstName, lastName, email)
                    VALUES ($1, $2, $3, $4)`
@@ -77,25 +84,26 @@ app.post('/register', async (req, res) => {
     }
 })
 
-
+// Page to collect user data
 app.get('/information', (req, res) => {
-    res.render('pages/informations', {user: req.session.user, error: req.session.error});
+    res.render('pages/informations', { user: req.session.user, error: req.session.error });
 });
 
+// Handle user data
 app.post('/information', async (req, res) => {
     const query = `INSERT INTO personal_info (first_name, last_name, phone_number, email, street_address, city, state, zip_code, college, degree, high_school, company_name, position, employment_time, achievements, skills, referal_name, referal_email, referal_number, resume, user_id_1)
                    VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, ARRAY[$12, $13, $14, $15], ARRAY[$16, $17, $18, $19], ARRAY[$20, $21, $22, $23], ARRAY[$24, $25, $26, $27], $28, ARRAY[$29, $30], ARRAY[$31, $32], ARRAY[$33, $34], $35, $36)`;
     const query_1 = 'select * from personal_info';
     try {
         await db.none(query, [req.body.first_name, req.body.last_name, req.body.phone_number, req.body.email_1, req.body.street_address, req.body.city, req.body.state, req.body.zip_code, req.body.college, req.body.degree, req.body.high_school, req.body.company_name, req.body.company_name_2, req.body.company_name_3, req.body.company_name_4, req.body.position, req.body.position_2, req.body.position_3, req.body.position_4, req.body.employment_time, req.body.employment_time_2, req.body.employment_time_3, req.body.employment_time_4, req.body.achievements, req.body.achievements_2, req.body.achievements_3, req.body.achievements_4, req.body.skills, req.body.referal_name, req.body.referal_name_2, req.body.referal_email, req.body.referal_email_2, req.body.referal_number, req.body.referal_number_2, req.body.resume, req.session.user.userid])
-            req.session.user.formData = req.body;
-            req.session.save();
-            console.log(`Information enterted successfully ${req.body.first_name}`);
-            req.session.error = {
-                err_level: "success",
-                err_msg: "You have successfully inputed your information."
-            }
-            res.redirect('/information_1');
+        req.session.user.formData = req.body;
+        req.session.save();
+        console.log(`Information enterted successfully ${req.body.first_name}`);
+        req.session.error = {
+            err_level: "success",
+            err_msg: "You have successfully inputed your information."
+        }
+        res.redirect('/information_1');
     } catch (error) {
         console.log(`Failed to submit information: ${error}`);
         req.session.error = {
@@ -106,8 +114,9 @@ app.post('/information', async (req, res) => {
     }
 })
 
+// Page to display user data
 app.get('/information_1', (req, res) => {
-    res.render('pages/information_1', {user: req.session.user, error: req.session.error});
+    res.render('pages/information_1', { user: req.session.user, error: req.session.error });
 });
 
 /**
@@ -207,7 +216,7 @@ app.get('/information_1', (req, res) => {
 app.get('/api/jobs', async (req, res) => {
     let count = 5;
     try {
-        const { ft_search, company, role, location, offers_sponsorship, requires_us_citizenship, internship, limit, random} = req.query;
+        const { ft_search, company, role, location, offers_sponsorship, requires_us_citizenship, internship, limit, random } = req.query;
         let query = 'SELECT * FROM jobs';
         const conditions = [];
         const parameters = [];
@@ -252,7 +261,7 @@ app.get('/api/jobs', async (req, res) => {
         if (limit != null) {
             count = parseInt(limit);
             // make sure count is a number and less than 1000
-            if (isNaN(count) || count > 1000) {
+            if (isNaN(count) || count > 1000 || count < 1) {
                 count = 20;
             }
         }
@@ -262,8 +271,11 @@ app.get('/api/jobs', async (req, res) => {
             query += ' ORDER BY RANDOM()';
         }
 
+        // Add parameterized limit
+        conditions.push('LIMIT $' + (conditions.length + 1));
+        parameters.push(count);
 
-        query += ` LIMIT ${count}`;
+
         const jobs = await db.any(query, parameters);
         res.status(200).json(jobs);
     } catch (error) {
@@ -271,8 +283,9 @@ app.get('/api/jobs', async (req, res) => {
     }
 });
 
+// Login Page
 app.get('/login', (req, res) => {
-    res.render('pages/login', {user: req.session.user, error: req.session.error});
+    res.render('pages/login', { user: req.session.user, error: req.session.error });
     if (typeof req.session.error !== 'undefined') {
         console.log("Error:", req.session.error, "Type:", typeof req.session.error);
         req.session.error = undefined;
@@ -280,6 +293,7 @@ app.get('/login', (req, res) => {
     }
 });
 
+// Login Page
 app.post('/login', async (req, res) => {
 
     const email = req.body.email;
@@ -288,7 +302,7 @@ app.post('/login', async (req, res) => {
 
     if (email != null) {
         try {
-            const data = await db.oneOrNone(query, values); // Use oneOrNone instead of one
+            const data = await db.oneOrNone(query, values);
             if (data) {
                 console.log("User data:", data);
                 const match = await bcrypt.compare(req.body.password, data.password);
@@ -333,66 +347,6 @@ app.post('/login', async (req, res) => {
     }
 });
 
-app.get('/api/users/:userId/job-applications', (req, res) => {
-    const queryOne = `SELECT EXISTS(SELECT * FROM users WHERE userID = ${req.params.userId})`;
-    const queryTwo = `SELECT appID FROM user_to_applications WHERE userID = ${req.params.userId}`;
-
-    db.one(queryOne)
-        .then( (user) => {
-            if (!user.exists)
-                throw new Error('User not found');
-
-            return db.any(queryTwo);
-        })
-        .then( (appIdsObj) => {
-            const appIdsArr = appIdsObj.map( (app) => {
-                return app.appid;
-            });
-
-            if (appIdsArr.length === 0)
-                return [];
-
-            const queryThree = `SELECT * FROM applications WHERE appID = ANY(array [${appIdsArr}])`;
-            return db.any(queryThree);
-        })
-        .then( (apps) => {
-            res.status(200).json(apps);
-        })
-        .catch( (err) => {
-            res.status(500).json({error: err.message});
-        });
-});
-
-app.post('/api/users/:userId/job-applications', (req, res) => {
-    const queryOne = `SELECT EXISTS(SELECT * FROM users WHERE userID = ${req.params.userId})`;
-
-    db.one(queryOne)
-        .then( (user) => {
-            if (!user.exists)
-                throw new Error('User not found');
-            else if (!req.body.name || !req.body.company || !req.body.industry || !req.body.description)
-                throw new Error('Incorrect request body format');
-
-            const queryTwo = `INSERT INTO applications (name, company, industry, description)
-                                VALUES ('${req.body.name}', '${req.body.company}', '${req.body.industry}', '${req.body.description}')
-                                RETURNING appID`;
-
-            return db.one(queryTwo);
-        })
-        .then( (appID) => {
-            const queryThree = `INSERT INTO user_to_applications (userID, appID)
-                                    VALUES (${req.params.userId}, ${appID.appid})
-                                    RETURNING appID`;
-            return db.one(queryThree);
-        })
-        .then( (appID) => {
-            res.status(201).json(appID);
-        })
-        .catch( (err) => {
-            res.status(500).json({error: err.message});
-        });
-});
-
 // Authentication Middleware.
 const auth = (req, res, next) => {
     if (!req.session.user) {
@@ -412,130 +366,190 @@ app.get('/home', async (req, res) => {
     // Get Random Jobs
     try {
         const jobs = await fetch("http://localhost:3000/api/jobs?limit=15&random=true").then((res) =>
-        res.json()
-    );
-    res.render('pages/home', {user: req.session.user, error: req.session.error, jobs});
+            res.json()
+        );
+        res.render('pages/home', { user: req.session.user, error: req.session.error, jobs });
     } catch (error) {
         console.log(error);
-        res.render('pages/home', {user: req.session.user, error: req.session.error, jobs: []});
+        res.render('pages/home', { user: req.session.user, error: req.session.error, jobs: [] });
     }
 });
 
-  app.get('/logout', (req, res) => {
-      req.session.destroy();
-      res.redirect('/login');
-  });
+// Logout
+app.get('/logout', (req, res) => {
+    req.session.destroy();
+    res.redirect('/login');
+});
 
+// Job Board
 app.get('/jobs', async (req, res) => {
-  try {
-    // Check if there is a query parameter for full text search
-    const ft_search = req.query.ft_search;
-    if (ft_search === undefined) {
-        jobs = await fetch("http://localhost:3000/api/jobs?limit=50").then((res) =>
-            res.json()
-        );
-        res.render("pages/jobBoard", {jobs, user: req.session.user, error: req.session.error});
-    } else {
-        jobs = await fetch(`http://localhost:3000/api/jobs?ft_search=${ft_search}&limit=50`).then((res) =>
-            res.json()
-        );
-        res.render("pages/jobBoard", {jobs, user: req.session.user, error: req.session.error});
-    }
-    //res.render("pages/jobBoard", { jobs});
-    
-  } catch (error) {
-    console.error(error);
-    res.render("pages/jobBoard", {
-      jobs: [],
-      error: true,
-      message: error.message,
-    });
-  }
-});
-
-app.get('/job-applications', async (req, res) => {
     try {
-        // Make request to API
-        const jobApps = await fetch(`http://localhost:3000/api/users/${req.session.user.userid}/job-applications`).then((res) =>
-            res.json()
-        );
+        // Check if there is a query parameter for full text search
+        const ft_search = req.query.ft_search;
+        if (ft_search === undefined) {
+            jobs = await fetch("http://localhost:3000/api/jobs?limit=50").then((res) =>
+                res.json()
+            );
+            res.render("pages/jobBoard", { jobs, user: req.session.user, error: req.session.error });
+        } else {
+            jobs = await fetch(`http://localhost:3000/api/jobs?ft_search=${ft_search}&limit=50`).then((res) =>
+                res.json()
+            );
+            res.render("pages/jobBoard", { jobs, user: req.session.user, error: req.session.error });
+        }
         //res.render("pages/jobBoard", { jobs});
-        res.render("pages/applications", {apps: jobApps, user: req.session.user, error: req.session.error});
-      } catch (error) {
+
+    } catch (error) {
         console.error(error);
-        res.render("pages/home", {
-          jobs: [],
-          error: true,
-          message: error.message,
+        res.render("pages/jobBoard", {
+            jobs: [],
+            error: true,
+            message: error.message,
         });
-      }
+    }
 });
 
+// Job Applications
+app.get('/job-applications', async (req, res) => {
+    const queryOne = `SELECT EXISTS(SELECT * FROM users WHERE userID = ${req.session.user.userid})`;
+    const queryTwo = `SELECT appID FROM user_to_applications WHERE userID = ${req.session.user.userid}`;
+
+    db.one(queryOne)
+        .then((user) => {
+            if (!user.exists) {
+                throw new Error('User not found');
+            }
+
+            return db.any(queryTwo);
+        })
+        .then((appIdsObj) => {
+            const appIdsArr = appIdsObj.map((app) => {
+                return app.appid;
+            });
+
+            if (appIdsArr.length === 0) {
+                return [];
+            }
+
+            const queryThree = `SELECT * FROM applications WHERE appID = ANY(array [${appIdsArr}])`;
+            return db.any(queryThree);
+        })
+        .then((apps) => {
+            res.render('pages/applications', { apps: apps, user: req.session.user, error: req.session.error });
+        })
+
+        .catch((err) => {
+            console.log(err);
+        });
+
+});
+
+// Edit Job Application
 app.get('/job-applications/edit/:applicationid', (req, res) => {
     const query = "SELECT * FROM applications WHERE appID = $1";
+    const checkIfUserOwnsApp = `SELECT EXISTS(SELECT * FROM user_to_applications WHERE userID = $1 AND appID = $2)`;
 
-    db.one(query, [req.params.applicationid])
-        .then((app) => {
-            res.render('pages/update-application', {user: req.session.user, app: app});
+    // Check if logged in user actually owns the applicatoin
+    db.one(checkIfUserOwnsApp, [req.session.user.userid, req.params.applicationid])
+        .then((user) => {
+            if (!user.exists) {
+                // Redirect to applications page if user does not own application
+                res.redirect('/job-applications');
+            } else {
+                db.one(query, [req.params.applicationid])
+                    .then((app) => {
+                        res.render('pages/update-application', { user: req.session.user, app: app });
+                    })
+                    .catch((err) => {
+                        console.log(err);
+                    });
+            }
+        });
+
+
+});
+
+// Update Job Application
+app.post('/job-applications/edit', (req, res) => {
+    const query = 'UPDATE applications SET name = $1, company = $2, industry = $3, description = $4, status = $5 WHERE appID = $6';
+    const checkIfUserOwnsApp = `SELECT EXISTS(SELECT * FROM user_to_applications WHERE userID = $1 AND appID = $2)`;
+
+    // Check if logged in user actually owns the applicatoin
+    db.one(checkIfUserOwnsApp, [req.session.user.userid, req.body.applicationid])
+        .then((user) => {
+            if (!user.exists) {
+                // Redirect to applications page if user does not own application
+                res.redirect('/job-applications');
+            } else {
+                db.none(query, [req.body.name, req.body.company, req.body.industry, req.body.description, req.body.status, req.body.applicationid])
+                    .then(() => {
+                        res.redirect('/job-applications');
+                    })
+                    .catch((err) => {
+                        console.log(err);
+                    });
+            }
+        }
+        );
+
+
+
+});
+
+// Add Job Application
+app.get('/job-applications/add', (req, res) => {
+    res.render('pages/add-application', { user: req.session.user });
+});
+
+// Handle Add Job Application
+app.post('/job-applications/add', (req, res) => {
+    const queryOne = "INSERT INTO applications (name, company, industry, description, status) VALUES ($1, $2, $3, $4, $5) RETURNING appID";
+
+    db.one(queryOne, [req.body.name, req.body.company, req.body.industry, req.body.description, req.body.status])
+        .then((appid) => {
+            const queryTwo = "INSERT INTO user_to_applications (userID, appID) VALUES ($1, $2)";
+            return db.none(queryTwo, [req.session.user.userid, appid.appid]);
+        })
+        .then(() => {
+            res.redirect('/job-applications');
         })
         .catch((err) => {
             console.log(err);
         });
 });
 
-app.post('/job-applications/edit', (req, res) => {
-    const query = 'UPDATE applications SET name = $1, company = $2, industry = $3, description = $4, status = $5 WHERE appID = $6';
-
-    db.none(query, [req.body.name, req.body.company, req.body.industry, req.body.description, req.body.status, req.body.applicationid])
-        .then( () => {
-            res.redirect('/job-applications');
-        })
-        .catch( (err) => {
-            console.log(err);
-        });
-});
-
-app.get('/job-applications/add', (req, res) => {
-    res.render('pages/add-application', {user: req.session.user});
-});
-
-app.post('/job-applications/add', (req, res) => {
-    const queryOne = "INSERT INTO applications (name, company, industry, description, status) VALUES ($1, $2, $3, $4, $5) RETURNING appID";
-
-    db.one(queryOne, [req.body.name, req.body.company, req.body.industry, req.body.description, req.body.status])
-        .then( (appid) => {
-            const queryTwo = "INSERT INTO user_to_applications (userID, appID) VALUES ($1, $2)";
-            return db.none(queryTwo, [req.session.user.userid, appid.appid]);
-        })
-        .then( () => {
-            res.redirect('/job-applications');
-        })
-        .catch( (err) => {
-            console.log(err);
-        });
-});
-
+// Delete Job Application
 app.post('/job-applications/delete', (req, res) => {
     const queryOne = 'DELETE FROM applications WHERE appID = $1';
     const queryTwo = 'DELETE FROM user_to_applications WHERE appID = $1 AND userID = $2';
+    const checkIfUserOwnsApp = `SELECT EXISTS(SELECT * FROM user_to_applications WHERE userID = $1 AND appID = $2)`;
 
-    db.none(queryOne, [req.body.applicationid])
-        .then( () => {
-            return db.none(queryTwo, [req.body.applicationid, req.session.user.userid]);
-        })
-        .then( () => {
-            res.redirect('/job-applications');
-        })
-        .catch( (err) => {
-            console.log(err);
+    // Check if logged in user actually owns the applicatoin
+    db.one(checkIfUserOwnsApp, [req.session.user.userid, req.body.applicationid])
+        .then((user) => {
+            if (!user.exists) {
+                // Redirect to applications page if user does not own application
+                res.redirect('/job-applications');
+            } else {
+                db.none(queryOne, [req.body.applicationid])
+                    .then(() => {
+                        return db.none(queryTwo, [req.body.applicationid, req.session.user.userid]);
+                    })
+                    .then(() => {
+                        res.redirect('/job-applications');
+                    })
+                    .catch((err) => {
+                        console.log(err);
+                    });
+            }
         });
 });
 
 const port = process.env.PORT || 3000;
 if (process.env.NODE_ENV !== 'test') {
-   app.listen(port, () => {
-     console.log(`Server is running on port ${port}`);
-   });
- }
+    app.listen(port, () => {
+        console.log(`Server is running on port ${port}`);
+    });
+}
 
- module.exports = app;
+module.exports = app;
