@@ -41,6 +41,7 @@
                     <th scope="col">Company</th>
                     <th scope="col">Industry</th>
                     <th scope="col">Description</th>
+                    <th scope="col">Status</th>
                 </tr>
                 </thead>
                 <tbody>
@@ -51,6 +52,7 @@
                         <td><%= apps[i].company %></td>
                         <td><%= apps[i].industry %></td>
                         <td><%= apps[i].description %></td>
+                        <td><%= apps[i].status %></td>
                         <td>
                             <form action="/job-applications/edit/<%= apps[i].appid %>" method="GET">
                                 <button type="submit" class="btn btn-outline-primary" id="edit-btn">

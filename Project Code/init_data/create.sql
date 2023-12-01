@@ -13,7 +13,8 @@ CREATE TABLE applications(
     name VARCHAR,
     company VARCHAR,
     industry VARCHAR,
-    description VARCHAR
+    description VARCHAR,
+    status VARCHAR
 );
 
 DROP TABLE IF EXISTS user_to_applications CASCADE;

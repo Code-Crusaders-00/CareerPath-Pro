@@ -466,9 +466,9 @@ app.get('/job-applications/edit/:applicationid', (req, res) => {
 });
 
 app.post('/job-applications/edit', (req, res) => {
-    const query = 'UPDATE applications SET name = $1, company = $2, industry = $3, description = $4 WHERE appID = $5';
+    const query = 'UPDATE applications SET name = $1, company = $2, industry = $3, description = $4, status = $5 WHERE appID = $6';
 
-    db.none(query, [req.body.name, req.body.company, req.body.industry, req.body.description, req.body.applicationid])
+    db.none(query, [req.body.name, req.body.company, req.body.industry, req.body.description, req.body.status, req.body.applicationid])
         .then( () => {
             res.redirect('/job-applications');
         })
@@ -482,9 +482,9 @@ app.get('/job-applications/add', (req, res) => {
 });
 
 app.post('/job-applications/add', (req, res) => {
-    const queryOne = "INSERT INTO applications (name, company, industry, description) VALUES ($1, $2, $3, $4) RETURNING appID";
+    const queryOne = "INSERT INTO applications (name, company, industry, description, status) VALUES ($1, $2, $3, $4, $5) RETURNING appID";
 
-    db.one(queryOne, [req.body.name, req.body.company, req.body.industry, req.body.description])
+    db.one(queryOne, [req.body.name, req.body.company, req.body.industry, req.body.description, req.body.status])
         .then( (appid) => {
             const queryTwo = "INSERT INTO user_to_applications (userID, appID) VALUES ($1, $2)";
             return db.none(queryTwo, [req.session.user.userid, appid.appid]);
