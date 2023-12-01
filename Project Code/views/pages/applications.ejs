@@ -1,52 +1,80 @@
 <%- include ('../partials/head') %>
 <%- include ('../partials/nav') %>
 
+<style>
+    #container {
+        width: 90%;
+        margin: auto;
+    }
+
+    #del-btn {
+        color: 	#E60000;
+        border-color: 	#E60000;
+    }
+
+    #del-btn:hover {
+        background-color: 	#E60000;
+        color: white;
+    }
+
+    #add-btn {
+        color: #32A431;
+        border-color: #32A431;
+    }
+
+    #add-btn:hover {
+        background-color: #32A431;
+        color: white;
+    }
+</style>
 
 <main>
-    <% if (apps.length == 0) { %>
-        <h1>No applications added yet!</h1>
-    <% } else { %>
-        <table class="table">
-            <thead>
-              <tr>
-                <th scope="col">appID</th>
-                <th scope="col">Name</th>
-                <th scope="col">Company</th>
-                <th scope="col">Industry</th>
-                <th scope="col">Description</th>
-              </tr>
-            </thead>
-            <tbody>
-                <% for(let i = 0; i < apps.length; i++) { %>
+    <div class="container">
+        <% if (apps.length == 0) { %>
+            <h1>No applications added yet!</h1>
+        <% } else { %>
+            <table class="table">
+                <thead>
                 <tr>
-                    <td><%= apps[i].appid %></td>
-                    <td><%= apps[i].name %></td>
-                    <td><%= apps[i].company %></td>
-                    <td><%= apps[i].industry %></td>
-                    <td><%= apps[i].description %></td>
-                    <td>
-                        <form action="/job-applications/edit/<%= apps[i].appid %>" method="GET">
-                            <button type="submit" class="btn btn-outline-primary">
-                                Edit
-                            </button>
-                        </form>
-                        <form action="/job-applications/delete" method="POST">
-                            <input type="hidden" name="applicationid" value="<%= apps[i].appid %>">
-                            <button type="submit" class="btn btn-outline-primary">
-                                Delete
-                            </button>
-                        </form>
-                    </td>
+                    <th scope="col">appID</th>
+                    <th scope="col">Name</th>
+                    <th scope="col">Company</th>
+                    <th scope="col">Industry</th>
+                    <th scope="col">Description</th>
                 </tr>
-                <% } %>
-            </tbody>
-          </table>
-    <% } %>
-    <a href="/job-applications/add">
-      <button type="submit" class="btn btn-outline-primary">
-        Add Application
-      </button>
-    </a>
+                </thead>
+                <tbody>
+                    <% for(let i = 0; i < apps.length; i++) { %>
+                    <tr>
+                        <td><%= apps[i].appid %></td>
+                        <td><%= apps[i].name %></td>
+                        <td><%= apps[i].company %></td>
+                        <td><%= apps[i].industry %></td>
+                        <td><%= apps[i].description %></td>
+                        <td>
+                            <form action="/job-applications/edit/<%= apps[i].appid %>" method="GET">
+                                <button type="submit" class="btn btn-outline-primary" id="edit-btn">
+                                    Edit
+                                </button>
+                            </form>
+                            <form action="/job-applications/delete" method="POST">
+                                <input type="hidden" name="applicationid" value="<%= apps[i].appid %>">
+                                <button type="submit" class="btn btn-outline-primary" id="del-btn">
+                                    Delete
+                                </button>
+                            </form>
+                        </td>
+                    </tr>
+                    <% } %>
+                </tbody>
+            </table>
+        <% } %>
+        <a href="/job-applications/add">
+        <button type="submit" class="btn btn-outline-primary" id="add-btn">
+            Add Application
+        </button>
+        </a>
+    </div>
 </main>
 
 <%- include ('../partials/footer') %>

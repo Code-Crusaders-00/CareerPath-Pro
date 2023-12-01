@@ -1,29 +1,38 @@
 <%- include ('../partials/head') %>
 <%- include ('../partials/nav') %>
 
+<style>
+    #container {
+        width: 80%;
+        margin: auto;
+    }
+</style>
+
 
 <main>
-    <h2>Update application with appID <%= app.appid %></h2>
-    <form method="POST" action="/job-applications/edit">
-        <input type="hidden" name="applicationid" value="<%= app.appid %>">
-        <div class="mb-3">
-          <label for="name" class="form-label">Name</label>
-          <input type="text" class="form-control" id="name" value="<%= app.name %>" name="name">
-        </div>
-        <div class="mb-3">
-            <label for="company" class="form-label">Company</label>
-            <input type="text" class="form-control" id="company" value="<%= app.company %>" name="company">
-        </div>
-        <div class="mb-3">
-            <label for="industry" class="form-label">Industry</label>
-            <input type="text" class="form-control" id="industry" value="<%= app.industry %>" name="industry">
-        </div>
-        <div class="mb-3">
-            <label for="description" class="form-label">Description</label>
-            <input type="text" class="form-control" id="description" value="<%= app.description %>" name="description">
-        </div>
-        <button type="submit" class="btn btn-primary">Update</button>
-      </form>
+    <div id="container">
+        <h2>Update application with appID <%= app.appid %></h2>
+        <form method="POST" action="/job-applications/edit">
+            <input type="hidden" name="applicationid" value="<%= app.appid %>">
+            <div class="mb-3">
+            <label for="name" class="form-label">Name</label>
+            <input type="text" class="form-control" id="name" value="<%= app.name %>" name="name">
+            </div>
+            <div class="mb-3">
+                <label for="company" class="form-label">Company</label>
+                <input type="text" class="form-control" id="company" value="<%= app.company %>" name="company">
+            </div>
+            <div class="mb-3">
+                <label for="industry" class="form-label">Industry</label>
+                <input type="text" class="form-control" id="industry" value="<%= app.industry %>" name="industry">
+            </div>
+            <div class="mb-3">
+                <label for="description" class="form-label">Description</label>
+                <input type="text" class="form-control" id="description" value="<%= app.description %>" name="description">
+            </div>
+            <button type="submit" class="btn btn-primary">Update</button>
+        </form>
+    </div>
 </main>
 
 <%- include ('../partials/footer') %>

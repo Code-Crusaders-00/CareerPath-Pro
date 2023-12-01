@@ -29,6 +29,9 @@
                     <li class="nav-item">
                         <a class="nav-link" href="/jobs" style="margin-left: 20px;">Job Board</a>
                     </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/job-applications" style="margin-left: 20px;">Submitted Applications</a>
+                    </li>
                     <% if (locals.user.formData == null) { %>
                         <li class="nav-item">
                             <a class="nav-link" href="/information" style="margin-left: 20px;">Enter Application Information</a>
@@ -41,7 +44,7 @@
                     <% } %>
                     <% } %>
                 </ul>
-                <% if (locals.user) { %> 
+                <% if (locals.user) { %>
                 <div class="nav-item me-1">
                     <a class="nav-link" href="/logout">Logout</a>
                 </div>

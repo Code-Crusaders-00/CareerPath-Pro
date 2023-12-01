@@ -275,7 +275,7 @@ app.post('/login', async (req, res) => {
     const email = req.body.email;
     const query = "select * from users where email = $1";
     const values = [email];
-    
+
     if (email != null) {
         try {
             const data = await db.oneOrNone(query, values); // Use oneOrNone instead of one
