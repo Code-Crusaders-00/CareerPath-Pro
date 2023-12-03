@@ -1,125 +1,121 @@
-<%- include ('../partials/head') %> <%- include ('../partials/nav') %>
+<%- include ('../partials/head') %>
+<%- include ('../partials/nav') %>
+
+
+
 
 <script>
-	// Function to toggle the job description visibility
-	function toggleDescription(jobId) {
-		var description = document.getElementById("description" + jobId);
-		description.style.display =
-			description.style.display === "none" ||
-			description.style.display === ""
-				? "block"
-				: "none";
-	}
+   
+    // Function to toggle the job description visibility
+    function toggleDescription(jobId) {
+        var description = document.getElementById('description' + jobId);
+        description.style.display = (description.style.display === 'none' || description.style.display === '') ? 'block' : 'none';
+    }
+    
+    function searchJobs() {
+        var searchTerm = document.getElementById('jobSearch').value.toLowerCase();
+        window.location.href = '/jobs?ft_search=' + searchTerm;
+    }
+    function resetSearch() {
+        window.location.href = '/jobs';
+    }
 
-	function searchJobs() {
-		var searchTerm = document
-			.getElementById("jobSearch")
-			.value.toLowerCase();
-		window.location.href = "/jobs?ft_search=" + searchTerm;
-	}
-	function resetSearch() {
-		window.location.href = "/jobs";
-	}
 </script>
 
-<style>
-	.job-cards-container {
-		display: flex;
-		flex-wrap: wrap;
-		justify-content: space-between;
-	}
-</style>
 
-<% function parseDate(dateString) { var parts = dateString.split(/[-T:Z.]/); var
-dateObject = new Date(Date.UTC(parts[0], parts[1] - 1, parts[2], parts[3],
-parts[4], parts[5], parts[6])); var formattedDate = (dateObject.getMonth() +
-1).toString().padStart(2, '0') + '/' +
-dateObject.getDate().toString().padStart(2, '0') + '/' +
-dateObject.getFullYear(); return formattedDate; } %>
+<style>
+    .job-cards-container {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+     
+    }
+
+  </style>
+  
+
+
+<%
+function parseDate(dateString) {
+    var parts = dateString.split(/[-T:Z.]/);
+    var dateObject = new Date(Date.UTC(parts[0], parts[1] - 1, parts[2], parts[3], parts[4], parts[5], parts[6]));
+    var formattedDate = (dateObject.getMonth() + 1).toString().padStart(2, '0') +
+                        '/' +
+                        dateObject.getDate().toString().padStart(2, '0') +
+                        '/' +
+                        dateObject.getFullYear();
+                        
+    return formattedDate;
+}
+%>
+
+
 
 <main>
-	<div class="container">
-		<br />
-		<div class="d-flex">
-			<div class="form-floating me-2" style="width: 60%">
-				<input
-					type="text"
-					class="form-control"
-					id="jobSearch"
-					placeholder="Search by Title"
-				/>
-				<label for="floatingPassword">Search</label>
-			</div>
-			<button class="btn btn-primary me-2" onclick="searchJobs()">
-				Search
-			</button>
-			<button class="btn btn-secondary" onclick="resetSearch()">
-				Reset
-			</button>
-		</div>
+    <div class="container">
+        <br>
+        <div class="d-flex">
+            <div class="form-floating me-2" style="width: 60%;">
+                <input type="text" class="form-control" id="jobSearch" placeholder="Search by Title">
+                <label for="floatingPassword">Search</label>
+            </div>
+            <button class="btn btn-primary me-2" onclick="searchJobs()">Search</button>
+            <button class="btn btn-secondary" onclick="resetSearch()">Reset</button>
+        </div>
+        
+        
 
-		<br />
-		<div class="container">
-			<div class="row row-cols-2">
-				<% jobs.forEach(function(job) {%>
-				<div class="col">
-					<div class="card">
-						<div class="card-body">
-							<h5 class="card-title"><%= job.role %></h5>
-							<p class="card-text">Company: <%= job.company %></p>
-							<p class="card-text">
-								Location: <%= job.location %>
-							</p>
-							<p class="card-text">
-								Date Posted: <%= parseDate(job.date_posted) %>
-							</p>
-							<button
-								class="btn btn-info"
-								onclick="toggleDescription('<%= job.id %>')"
-							>
-								Learn More
-							</button>
-							<div
-								class="job-description"
-								id="description<%= job.id %>"
-								style="display: none"
-							>
-								<br />
-								<% var sponsorship = ''
-								if(job.offers_sponsorship == 0) { sponsorship =
-								"No"} else { sponsorship = "Yes" } %> <% var
-								citizenship = '' if(job.requires_us_citizenship
-								== 0) { citizenship = "No"} else { citizenship =
-								"Yes" } %> <% var jobType = '' if(job.internship
-								== 0) { jobType = "Employee"} else { jobType =
-								"Internship" } %>
-								<div class="d-grid gap-3">
-									<div class="p-2 bg-light border">
-										Offers Sponsorship: <%= sponsorship%>
-									</div>
-									<div class="p-2 bg-light border">
-										Requires US Citizenship: <%= citizenship
-										%>
-									</div>
-									<div class="p-2 bg-light border">
-										Job Type: <%= jobType %>
-									</div>
-								</div>
-								<br />
-								<a
-									href="<%= job.application_link %>"
-									class="btn btn-primary"
-									>Apply</a
-								>
-							</div>
-						</div>
-					</div>
-				</div>
-				<br />
-				<% }) %>
-			</div>
-		</div>
-	</div>
+
+        <br>
+        <div class="container">
+            <div class="row row-cols-2">
+                <% jobs.forEach(function(job) {%>
+                    <div class="col">
+                    <div class="card">
+                        <div class="card-body">
+                            <h5 class="card-title"><%= job.role %></h5>
+                            <p class="card-text">Company: <%= job.company %></p>
+                            <p class="card-text">Location: <%= job.location %></p>
+                            <p class="card-text">Date Posted: <%= parseDate(job.date_posted) %></p>
+                            <button class="btn btn-info" onclick="toggleDescription('<%= job.id %>')">Learn More</button>
+                            <div class="job-description" id="description<%= job.id %>" style="display: none;">
+                                <br>
+                                 <% var sponsorship = ''
+                                 if(job.offers_sponsorship == 0) { sponsorship = "No"}
+                                 else {
+                                    sponsorship = "Yes"
+                                 } %>
+
+                                <% var citizenship = ''
+                                 if(job.requires_us_citizenship == 0) { citizenship = "No"}
+                                 else {
+                                    citizenship = "Yes"
+                                 } %>
+                                 
+                            
+                                <% var jobType = ''
+                                 if(job.internship == 0) { jobType = "Employee"}
+                                 else {
+                                    jobType = "Internship"
+                                 } %> 
+                                 <div class="d-grid gap-3">
+                                    <div class="p-2 bg-light border">Offers Sponsorship: <%= sponsorship%></div>
+                                    <div class="p-2 bg-light border">Requires US Citizenship: <%= citizenship %></div>
+                                    <div class="p-2 bg-light border">Job Type: <%= jobType %></div>
+                                  </div>
+                                  <br>
+                                <a href="<%= job.application_link %>" class="btn btn-primary">Apply</a>
+                            </div>
+                        
+                        </div>
+                    </div>
+                </div><br>
+                <% }) %>
+            </div>
+            
+        </div>
+    </div>
 </main>
+
 
 <%- include ('../partials/footer') %>
