@@ -1,0 +1,94 @@
+<%- include ('../partials/head') %>
+    <%- include ('../partials/nav') %>
+
+
+
+
+        <main>
+            <div class="container-xxl">
+                <br>
+                <input class="form-control mb-5" required type="url" id="application_link" name="application_link" />
+                <button class="btn btn-primary mr-5 mb-5" type="button" onclick="loadIframe()">Load Application</button>
+                <button class="btn btn-primary mr-5 mb-5" type="button" onclick="fillUp()">Fill Application</button>
+
+                        <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.0.3/css/font-awesome.css"
+                            rel="stylesheet">
+
+                <iframe id="iframe" src="" width="100%" height="1000px" frameborder="0"></iframe>
+
+                <script>
+
+                    /*
+                    {
+projectcode-web-1  |   user_id: 1,
+projectcode-web-1  |   first_name: 'John',
+projectcode-web-1  |   last_name: 'Doe',
+projectcode-web-1  |   phone_number: '7208828888',
+projectcode-web-1  |   email: null,
+projectcode-web-1  |   street_address: 'Somewhere',
+projectcode-web-1  |   city: 'Boulder',
+projectcode-web-1  |   state: 'CO',
+projectcode-web-1  |   zip_code: '80303',
+projectcode-web-1  |   college: 'University of Colorado at Boulder',
+projectcode-web-1  |   degree: 'Bachelors of Arts in Mathematics',
+projectcode-web-1  |   high_school: 'Somewhere',
+projectcode-web-1  |   company_name: [ 'Evil Corp', null, null, null ],
+projectcode-web-1  |   position: [ 'Internship', null, null, null ],
+projectcode-web-1  |   employment_time: [ '2 years', null, null, null ],
+projectcode-web-1  |   achievements: [ '-', null, null, null ],
+projectcode-web-1  |   skills: 'Python',
+projectcode-web-1  |   referal_name: [ 'Someone', null ],
+projectcode-web-1  |   referal_email: [ 'someone@somewhere.com', null ],
+projectcode-web-1  |   referal_number: [ '7208888888', null ],
+projectcode-web-1  |   resume: <Buffer 43 68 61 75 68 61 6e 5f 4e 61 76 61 6e 5f 52 65 73 75 6d 65 2e 70 64 66>,
+projectcode-web-1  |   user_id_1: 1
+projectcode-web-1  | }
+                    */
+
+                    let userEmail = "<%= user.email %>";
+                    let userFullName = "<%= data.first_name %> <%= data.last_name %>";
+                    let userPhoneNumber = "<%= data.phone_number %>";
+                    let currentCompany = "<%= data.company_name[0] %>";
+                    let userResume = "<%= data.resume %>";
+                    let userLinkedin = "https://linkedin.com/in/<%= data.first_name %>-<%= data.last_name %>"
+                    let userGithub = "https://github.com/<%= data.first_name %><%= data.last_name %>"
+
+                    function loadIframe() {
+                        var link = document.getElementById("application_link").value;
+                        var iframeDiv = document.getElementById("iframe")
+
+                        // Load IFrame
+                        if (link) {
+                            iframeDiv.src = link;
+                        } else {
+                            alert("Please enter a valid link")
+                        }
+                    }
+
+                    function fillUp() {
+                        var iframeDiv = document.getElementById("iframe").contentWindow.document;
+                        // fill up name, email, phone, org
+                        var fullNameDiv = iframeDiv.getElementsByName("name")[0];
+                        var emailDiv = iframeDiv.getElementsByName("email")[0];
+                        var phoneDiv = iframeDiv.getElementsByName("phone")[0];
+                        var orgDiv = iframeDiv.getElementsByName("org")[0];
+                        var resumeDive = iframeDiv.getElementsByName("resume")[0];
+                        let githubDiv = iframeDiv.getElementsByName("urls[GitHub]")[0];
+                        let linkedinDiv = iframeDiv.getElementsByName("urls[LinkedIn]")[0];
+
+
+                        fullNameDiv.value = userFullName;
+                        emailDiv.value = userEmail;
+                        phoneDiv.value = userPhoneNumber;
+                        orgDiv.value = currentCompany;
+                        githubDiv.value = userGithub;
+                        linkedinDiv.value = userLinkedin;
+
+                    }
+                </script>
+
+            </div>
+        </main>
+
+
+        <%- include ('../partials/footer') %>

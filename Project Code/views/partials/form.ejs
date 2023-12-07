@@ -8,15 +8,15 @@
 			newJobExperience.innerHTML = `
             <div >
                 <label style ="display: inline;" for="company_name">Company Name ${counter}: </label> <br>
-                <input required type="text" id="company_name_${counter}" name="company_name_${counter}" />
+                <input class="form-control" required type="text" id="company_name_${counter}" name="company_name_${counter}" />
             </div>
             <div >
                 <label style ="display: inline;" for="position">Position ${counter}</label> <br>
-                <input required type="text" id="position_${counter}" name="position_${counter}" />
+                <input class="form-control" required type="text" id="position_${counter}" name="position_${counter}" />
             </div>
             <div >
                 <label style ="display: inline;" for="employment_time">Time in postion ${counter}</label> <br>
-                <input required type="text" id="employment_time_${counter}" name="employment_time_${counter}" />
+                <input class="form-control" required type="text" id="employment_time_${counter}" name="employment_time_${counter}" />
             </div>
             <div >
                 <label style ="display: inline;" for="achievements">Achievements ${counter}</label> <br>
@@ -40,15 +40,15 @@
 			newReference.innerHTML = `
         <div >
             <label style ="display: inline;" for="referal_name">Name of Person doing referal: ${counter_1}</label> <br>
-            <input required type="text" id="referal_name_${counter_1}" name="referal_name_${counter}" />
+            <input class="form-control" required type="text" id="referal_name_${counter_1}" name="referal_name_${counter}" />
         </div>
         <div >
             <label style ="display: inline;" for="referal_email">Referal Email ${counter_1}</label> <br>
-            <input required type="email" id="referal_email_${counter_1}" name="referal_email_${counter}" />
+            <input class="form-control" required type="email" id="referal_email_${counter_1}" name="referal_email_${counter}" />
         </div>
         <div >
             <label style ="display: inline;" for="referal_number">Referal Phone Number ${counter_1}</label> <br>
-            <input required type="text" id="referal_number_${counter_1}" name="referal_number_${counter}" />
+            <input class="form-control" required type="text" id="referal_number_${counter_1}" name="referal_number_${counter}" />
         </div>
       `;
 
@@ -65,40 +65,33 @@
 	}
 </script>
 <div
-	class="border"
-	style="
-		text-align: center;
-		margin-left: auto;
-		margin-right: auto;
-		width: 500px;
-		margin-top: 150px;
-	"
+	class="container"
 >
 	<form action="/information" method="POST" id="information">
 		<h3>Personal Information</h3>
-		<div>
-			<label style="display: inline" for="first_name">First Name: </label>
+		<div class="mb-3">
+			<label class="form-label" for="first_name">First Name: </label>
 			<br />
-			<input required type="text" id="first_name" name="first_name" />
+			<input class="form-control" required type="text" id="first_name" name="first_name" />
 		</div>
 		<div>
-			<label style="display: inline" for="last_name">Last Name: </label>
+			<label class="form-label" for="last_name">Last Name: </label>
 			<br />
-			<input required type="text" id="last_name" name="last_name" />
+			<input class="form-control" required type="text" id="last_name" name="last_name" />
 		</div>
 		<div>
-			<label style="display: inline" for="phone_number"
+			<label class="form-label" for="phone_number"
 				>Phone Number:
 			</label>
 			<br />
-			<input required type="text" id="phone_number" name="phone_number" />
+			<input class="form-control" required type="text" id="phone_number" name="phone_number" />
 		</div>
 		<div>
-			<label style="display: inline" for="email_1">Email: </label> <br />
-			<input required type="email" id="email_1" name="email" />
+			<label class="form-label" for="email_1">Email: </label> <br />
+			<input class="form-control" required type="email" id="email_1" name="email" />
 		</div>
 		<div>
-			<label style="display: inline" for="street_address"
+			<label class="form-label" for="street_address"
 				>Address:
 			</label>
 			<br />
@@ -110,47 +103,47 @@
 			/>
 		</div>
 		<div>
-			<label style="display: inline" for="city">City: </label> <br />
-			<input required type="text" id="city" name="city" />
+			<label class="form-label" for="city">City: </label> <br />
+			<input class="form-control" required type="text" id="city" name="city" />
 		</div>
 		<div>
-			<label style="display: inline" for="state">State: </label> <br />
-			<input required type="text" id="state" name="state" />
+			<label class="form-label" for="state">State: </label> <br />
+			<input class="form-control" required type="text" id="state" name="state" />
 		</div>
 		<div>
-			<label style="display: inline" for="zip_code">Zip code: </label>
+			<label class="form-label" for="zip_code">Zip code: </label>
 			<br />
-			<input required type="text" id="zip_code" name="zip_code" />
+			<input class="form-control" required type="text" id="zip_code" name="zip_code" />
 		</div>
 		<h3>Educational Background</h3>
 		<div>
-			<label style="display: inline" for="college"
+			<label class="form-label" for="college"
 				>College Attended:
 			</label>
 			<br />
-			<input id="college" name="college" />
+			<input class="form-control" id="college" name="college" />
 		</div>
 		<div>
-			<label style="display: inline" for="degree"
+			<label class="form-label" for="degree"
 				>Planned or earned Degree:
 			</label>
 			<br />
-			<input id="degree" name="degree" />
+			<input class="form-control" id="degree" name="degree" />
 		</div>
 		<div style="margin-bottom: 30px">
 			<p>If you didn't attended college leave previous blank.</p>
 		</div>
 		<div>
-			<label style="display: inline" for="high_school"
+			<label class="form-label" for="high_school"
 				>High School Attended:
 			</label>
 			<br />
-			<input required type="text" id="high_school" name="high_school" />
+			<input class="form-control" required type="text" id="high_school" name="high_school" />
 		</div>
 		<h3>Previous Work Experience</h3>
 		<div id="work_experience">
 			<div>
-				<label style="display: inline" for="company_name"
+				<label class="form-label" for="company_name"
 					>Company Name:
 				</label>
 				<br />
@@ -162,12 +155,12 @@
 				/>
 			</div>
 			<div>
-				<label style="display: inline" for="position">Position</label>
+				<label class="form-label" for="position">Position</label>
 				<br />
-				<input required type="text" id="position" name="position" />
+				<input class="form-control" required type="text" id="position" name="position" />
 			</div>
 			<div>
-				<label style="display: inline" for="employment_time"
+				<label class="form-label" for="employment_time"
 					>Time in postion</label
 				>
 				<br />
@@ -179,7 +172,7 @@
 				/>
 			</div>
 			<div>
-				<label style="display: inline" for="achievements"
+				<label class="form-label" for="achievements"
 					>Achievements</label
 				>
 				<br />
@@ -200,13 +193,13 @@
 		</button>
 		<h3>Skills</h3>
 		<div>
-			<label style="display: inline" for="skills">Skills: </label> <br />
-			<input required type="list" id="skills" name="skills" />
+			<label class="form-label" for="skills">Skills: </label> <br />
+			<input class="form-control" required type="list" id="skills" name="skills" />
 		</div>
 		<h3>References</h3>
 		<div id="references">
 			<div>
-				<label style="display: inline" for="referal_name"
+				<label class="form-label" for="referal_name"
 					>Name of Person doing referal:
 				</label>
 				<br />
@@ -218,7 +211,7 @@
 				/>
 			</div>
 			<div>
-				<label style="display: inline" for="referal_email"
+				<label class="form-label" for="referal_email"
 					>Referal Email
 				</label>
 				<br />
@@ -230,7 +223,7 @@
 				/>
 			</div>
 			<div>
-				<label style="display: inline" for="referal_number"
+				<label class="form-label" for="referal_number"
 					>Referal Phone Number</label
 				>
 				<br />
@@ -252,12 +245,12 @@
 		<br />
 		<h3>Resume</h3>
 		<div>
-			<label style="display: inline" for="resume"
+			<label class="form-label" for="resume"
 				>Insert Resume Below</label
 			>
 			<br />
 			<br />
-			<input required type="file" id="resume" name="resume" />
+			<input class="form-control" required type="file" id="resume" name="resume" />
 		</div>
 		<input
 			style="margin-top: 30px; margin-bottom: 30px"
